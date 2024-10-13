@@ -1,0 +1,72 @@
+<script>
+
+import Header from '@/components/Header.vue';
+// import RegistrationComponent from "@/components/RegistrationComponent.vue";
+import StartView from "@/views/StartView.vue";
+
+export default {
+  name: 'App',
+  components: {
+    StartView,
+    Header
+  },
+  data(){
+    return {
+      headerParams: {
+        title: "Лабораторная работа 1",
+        name: "Русакова Лена",
+        group: "P3317",
+        variant: "367519"
+      }
+    }
+  }
+}
+
+</script>
+
+<template>
+  <header>
+
+    <div class="wrapper">
+      <Header v-bind="headerParams"/>
+<!--      <RegistrationComponent/>-->
+<!--      <test-component/>-->
+    </div>
+  </header>
+
+<!--  <router-view/>-->
+
+  <main>
+    <router-view/>
+<!--    <StartView/>-->
+  </main>
+</template>
+
+<style scoped>
+header {
+  line-height: 1.5;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+</style>
