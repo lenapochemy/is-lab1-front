@@ -165,6 +165,8 @@ export default{
 </script>
 
 <template>
+  <span id="res"></span>
+
   <form @submit.prevent="getSpaceMarines">
     <input class="but" type="submit" value="get marines">
   </form>
@@ -262,12 +264,14 @@ export default{
     <span>COORDINATES:</span>
     <div>
       <span>coordinate X:</span>
-      <input type="text" v-model="coordinates.x"/>
+      <input type="text" v-model="coordinates.x" required min="-146"/>
+<!--      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>-->
     </div>
 
     <div>
       <span>coordinate Y:</span>
-      <input type="text" v-model="coordinates.y"/>
+      <input type="text" v-model="coordinates.y" required/>
+
     </div>
 
     <div>
@@ -279,7 +283,7 @@ export default{
     <span>CHAPTER:</span>
     <div>
       <span>chapter name:</span>
-      <input type="text" v-model="chapter.name"/>
+      <input type="text" v-model="chapter.name" required/>
     </div>
 
     <div>
@@ -381,5 +385,7 @@ export default{
 </template>
 
 <style scoped>
-
+.error input {
+  border-color: red;
+}
 </style>
