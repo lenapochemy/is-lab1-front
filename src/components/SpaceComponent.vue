@@ -126,6 +126,7 @@ export default{
           .then(response => {
             document.getElementById("res").innerHTML = "delete good";
             this.getChapters();
+            this.getSpaceMarines();
           })
           .catch(error => {
             errorHandler(error.response.status, "res");
@@ -135,6 +136,19 @@ export default{
       api.delete("/space/coord/" + id)
           .then(response => {
             document.getElementById("res").innerHTML = "delete good";
+            this.getCoordinates();
+            this.getSpaceMarines();
+          })
+          .catch(error => {
+            errorHandler(error.response.status, "res");
+          })
+    },
+    deleteSpaceMarine: function (id){
+      api.delete("/space/" + id)
+          .then(response => {
+            document.getElementById("res").innerHTML = "delete good";
+            this.getSpaceMarines();
+            this.getChapters();
             this.getCoordinates();
           })
           .catch(error => {
@@ -233,6 +247,11 @@ export default{
       <td>{{marine.category}}</td>
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
+      <td>
+        <form @submit.prevent="deleteSpaceMarine(marine.id)">
+          <input type="submit" value="delete"/>
+        </form>
+      </td>
     </tr>
     </tbody>
   </table>
