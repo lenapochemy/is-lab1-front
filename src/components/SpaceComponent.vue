@@ -1,10 +1,12 @@
 <script>
 
 import {api} from "@/axios.js";
-import {errorHandler} from "@/js/errorHandler.js";
+import {utils} from "@/js/utils.js";
+import UpdateComponent from "@/components/UpdateComponent.vue";
 
 export default{
   name: "SpaceComponent",
+  components: {UpdateComponent},
   data(){
     return {
       spaceMarines: [],
@@ -28,14 +30,16 @@ export default{
         weaponType: null,
         meleeWeapon: null
       },
-      coordinates: {
-        x: '',
-        y: ''
-      },
-      chapter: {
-        name: '',
-        parentLegion: null
-      },
+      // coordinates: {
+      //   id: '',
+      //   x: '',
+      //   y: ''
+      // },
+      // chapter: {
+      //   id: '',
+      //   name: '',
+      //   parentLegion: null
+      // },
       chapterForDeleteId: ''
     }
   },
@@ -78,6 +82,7 @@ export default{
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
               this.coords = response.data;
+              localStorage.setItem("coords", this.coords)
             }
           })
           .catch(error => {
@@ -86,6 +91,30 @@ export default{
 
     },
     addSpaceMarine: function() {
+      // console.log(this.coords);
+      // console.log(this.chapters);
+      // let coords_for_add = [];
+      // let chapters_for_add = [];
+      //
+      // for (let coord in this.coords){
+      //   this.coordinates.id = coord.id;
+      //   this.coordinates.x = coord.x;
+      //   this.coordinates.y = coord.y;
+      //   coords_for_add.push(this.coordinates);
+      // }
+      //
+      // for(let chap in this.chapters){
+      //   this.chapter.id = chap.id;
+      //   this.chapter.name = chap.name;
+      //   this.chapter.parentLegion = chap.parentLegion;
+      //   chapters_for_add.push(this.chapter);
+      // }
+      //
+      // console.log(coords_for_add)
+      // console.log(chapters_for_add)
+      // this.$router.push({name: 'add-space-marine-page', state: {coords: coords_for_add, chapters: chapters_for_add}})
+
+
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
         api.post("/space/addSpaceMarine", this.spaceMarine, {
@@ -98,43 +127,45 @@ export default{
               this.getSpaceMarines();
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              utils(error.response.status, "res");
             })
       }
     },
     addChapter: function() {
-      if(this.validateChapterName()) {
-        api.post("/space/newChapter", this.chapter, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-            .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
-              this.getChapters();
-            })
-            .catch(error => {
-              errorHandler(error.response.status, "res");
-            })
-      }
+      this.$router.push({name: 'add-chapter-page'})
+      // if(this.validateChapterName()) {
+      //   api.post("/space/newChapter", this.chapter, {
+      //     headers: {
+      //       "Content-Type": "application/json"
+      //     }
+      //   })
+      //       .then(response => {
+      //         document.getElementById("res").innerHTML = "ura add";
+      //         this.getChapters();
+      //       })
+      //       .catch(error => {
+      //         utils(error.response.status, "res");
+      //       })
+      // }
     },
     addCoordinate: function() {
+      this.$router.push({name: 'add-coordinate-page'})
       // console.log(this.validateCoordX() + this.validateCoordY())
-      if(this.validateCoordX() && this.validateCoordY()) {
-        // console.log("in request")
-        api.post("/space/newCoord", this.coordinates, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-            .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
-              this.getCoordinates();
-            })
-            .catch(error => {
-              errorHandler(error.response.status, "res");
-            })
-      }
+      // if(this.validateCoordX() && this.validateCoordY()) {
+      //   // console.log("in request")
+      //   api.post("/space/newCoord", this.coordinates, {
+      //     headers: {
+      //       "Content-Type": "application/json"
+      //     }
+      //   })
+      //       .then(response => {
+      //         document.getElementById("res").innerHTML = "ura add";
+      //         this.getCoordinates();
+      //       })
+      //       .catch(error => {
+      //         utils(error.response.status, "res");
+      //       })
+      // }
     },
     deleteChapter: function(){
       api.delete("/space/chapter/" + this.chapterForDeleteId)
@@ -144,7 +175,7 @@ export default{
             this.getSpaceMarines();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            utils(error.response.status, "res");
           })
     },
     deleteCoord: function (id){
@@ -155,7 +186,7 @@ export default{
             this.getSpaceMarines();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            utils(error.response.status, "res");
           })
     },
     deleteSpaceMarine: function (id){
@@ -167,7 +198,7 @@ export default{
             this.getCoordinates();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            utils(error.response.status, "res");
           })
     },
     validateName(){
@@ -229,55 +260,55 @@ export default{
         return true;
       }
     },
-    validateCoordX(){
-      // console.log("in validate x");
-      // console.log(this.coordinates.x);
-      if(this.coordinates.x == ""){
-        this.createErrorMessage("Coordinate X can't be empty", "coord_x");
-        return false;
-      } else {
-        this.coordinates.x.replace(",", ".");
-        let x = this.coordinates.x;
-        if (!(!isNaN(parseFloat(x)) && isFinite(x))) {
-          this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
-          return false;
-        } else {
-          if (x <= -147) {
-            this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
-            return false;
-          } else {
-            this.cleanErrorMessage("coord_x");
-            return true;
-          }
-        }
-      }
-    },
-    validateCoordY(){
-      // console.log("in validate y");
-      if(this.coordinates.y == ""){
-        this.createErrorMessage("Coordinate Y can't be empty", "coord_y");
-        return false;
-      } else {
-        this.coordinates.y.replace(",", ".");
-        let y = this.coordinates.y;
-        if (isNaN(parseFloat(y))) {
-          this.createErrorMessage("Coordinate Y should be a number", "coord_y");
-          return false;
-        } else {
-          this.cleanErrorMessage("coord_y");
-          return true;
-        }
-      }
-    },
-    validateChapterName(){
-      if(this.chapter.name == ""){
-        this.createErrorMessage("Chapter name can't be empty", "chapter_name");
-        return false;
-      } else {
-        this.cleanErrorMessage("chapter_name");
-        return true;
-      }
-    }
+    // validateCoordX(){
+    //   // console.log("in validate x");
+    //   // console.log(this.coordinates.x);
+    //   if(this.coordinates.x == ""){
+    //     this.createErrorMessage("Coordinate X can't be empty", "coord_x");
+    //     return false;
+    //   } else {
+    //     this.coordinates.x.replace(",", ".");
+    //     let x = this.coordinates.x;
+    //     if (!(!isNaN(parseFloat(x)) && isFinite(x))) {
+    //       this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
+    //       return false;
+    //     } else {
+    //       if (x <= -147) {
+    //         this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
+    //         return false;
+    //       } else {
+    //         this.cleanErrorMessage("coord_x");
+    //         return true;
+    //       }
+    //     }
+    //   }
+    // },
+    // validateCoordY(){
+    //   // console.log("in validate y");
+    //   if(this.coordinates.y == ""){
+    //     this.createErrorMessage("Coordinate Y can't be empty", "coord_y");
+    //     return false;
+    //   } else {
+    //     this.coordinates.y.replace(",", ".");
+    //     let y = this.coordinates.y;
+    //     if (isNaN(parseFloat(y))) {
+    //       this.createErrorMessage("Coordinate Y should be a number", "coord_y");
+    //       return false;
+    //     } else {
+    //       this.cleanErrorMessage("coord_y");
+    //       return true;
+    //     }
+    //   }
+    // },
+    // validateChapterName(){
+    //   if(this.chapter.name == ""){
+    //     this.createErrorMessage("Chapter name can't be empty", "chapter_name");
+    //     return false;
+    //   } else {
+    //     this.cleanErrorMessage("chapter_name");
+    //     return true;
+    //   }
+    // }
   },
   mounted() {
     this.getCoordinates();
@@ -325,10 +356,19 @@ export default{
         <form @submit.prevent="deleteCoord(coord.id)">
           <input type="submit" value="delete"/>
         </form>
+<!--        <button value="edit" onclick=""-->
+<!--        <UpdateComponent v-bind:></UpdateComponent>-->
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div>
+    <form @submit.prevent="addCoordinate">
+      <input class="but" type="submit" value="add new coordinate">
+    </form>
+  </div>
+
 
   <table border="1" id="chapter_table">
     <thead>
@@ -344,6 +384,12 @@ export default{
     </tr>
     </tbody>
   </table>
+
+  <div>
+    <form @submit.prevent="addChapter">
+      <input class="but" type="submit" value="add new chapter">
+    </form>
+  </div>
 
   <table border="1" id="space_marine_table">
     <thead>
@@ -381,46 +427,50 @@ export default{
     </tbody>
   </table>
 
+<!--  <div>-->
+<!--    <form @submit.prevent="addSpaceMarine">-->
+<!--      <input class="but" type="submit" value="add new space marine">-->
+<!--    </form>-->
+<!--  </div>-->
 
+<!--  <form id="coord">-->
+<!--    <span>COORDINATES:</span>-->
+<!--    <div>-->
+<!--      <span>coordinate X:</span>-->
+<!--      <input type="text" v-model="coordinates.x" @change="validateCoordX"/>-->
+<!--      <span class="error" id="coord_x_error"/>-->
+<!--&lt;!&ndash;      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>&ndash;&gt;-->
+<!--    </div>-->
 
-  <form id="coord">
-    <span>COORDINATES:</span>
-    <div>
-      <span>coordinate X:</span>
-      <input type="text" v-model="coordinates.x" @change="validateCoordX"/>
-      <span class="error" id="coord_x_error"/>
-<!--      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>-->
-    </div>
+<!--    <div>-->
+<!--      <span>coordinate Y:</span>-->
+<!--      <input type="text" v-model="coordinates.y" @change="validateCoordY"/>-->
+<!--      <span class="error" id="coord_y_error"/>-->
+<!--    </div>-->
 
-    <div>
-      <span>coordinate Y:</span>
-      <input type="text" v-model="coordinates.y" @change="validateCoordY"/>
-      <span class="error" id="coord_y_error"/>
-    </div>
+<!--    <div>-->
+<!--      <input class="but"  type="submit" @click.prevent="addCoordinate" value="add"/>-->
+<!--    </div>-->
+<!--  </form>-->
 
-    <div>
-      <input type="submit" @click.prevent="addCoordinate" value="add"/>
-    </div>
-  </form>
+<!--  <form id="chapter">-->
+<!--    <span>CHAPTER:</span>-->
+<!--    <div>-->
+<!--      <span>chapter name:</span>-->
+<!--      <input type="text" v-model="chapter.name" @change="validateChapterName"/>-->
+<!--      <span class="error" id="chapter_name_error"/>-->
+<!--    </div>-->
 
-  <form id="chapter">
-    <span>CHAPTER:</span>
-    <div>
-      <span>chapter name:</span>
-      <input type="text" v-model="chapter.name" @change="validateChapterName"/>
-      <span class="error" id="chapter_name_error"/>
-    </div>
+<!--    <div>-->
+<!--      <span>chapter parent legion:</span>-->
+<!--      <input type="text" v-model="chapter.parentLegion"/>-->
+<!--&lt;!&ndash;      <span id="chapter_parent_error"/>&ndash;&gt;-->
+<!--    </div>-->
 
-    <div>
-      <span>chapter parent legion:</span>
-      <input type="text" v-model="chapter.parentLegion"/>
-<!--      <span id="chapter_parent_error"/>-->
-    </div>
-
-    <div>
-      <input type="submit" @click.prevent="addChapter()" value="add"/>
-    </div>
-  </form>
+<!--    <div>-->
+<!--      <input type="submit" @click.prevent="addChapter()" value="add"/>-->
+<!--    </div>-->
+<!--  </form>-->
 
 
   <form id="spaceMarine">
@@ -444,10 +494,6 @@ export default{
       <select v-model="spaceMarine.chapter.id" @change="validateChapter">
         <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
       </select>
-<!--      <div v-for="chapter in chapters">-->
-<!--        <input type="radio" v-model="spaceMarine.chapter.id"  v-bind:value="chapter.id" @change="validateChapter"/>-->
-<!--        <label>name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</label>-->
-<!--      </div>-->
 
       <span class="error" id="chapter_error"/>
     </div>
@@ -505,7 +551,7 @@ export default{
     </div>
 
     <div>
-      <input type="submit" @click.prevent="addSpaceMarine()" value="add"/>
+      <input class="but"  type="submit" @click.prevent="addSpaceMarine()" value="add"/>
     </div>
   </form>
 

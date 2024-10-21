@@ -1,4 +1,4 @@
-export function errorHandler(status, mess, mode){
+export function utils(status, mess, mode){
     switch (status){
         case 400:
             document.getElementById(mess).innerHTML = "Неверные данные";
@@ -18,4 +18,11 @@ export function errorHandler(status, mess, mode){
         default:
             document.getElementById(mess).innerHTML = "Проблемы с сервером :(";
     }
+}
+
+export function createErrorMessage(mess, param){
+    document.getElementById(param).innerHTML = mess;
+}
+export function cleanErrorMessage(param){
+    document.getElementById(param).innerHTML = null;
 }

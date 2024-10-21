@@ -20,7 +20,7 @@
 
 <script>
 import {api} from '@/axios'
-import {errorHandler} from "@/js/errorHandler.js";
+import {utils} from "@/js/utils.js";
 
 export default {
   name: "RegistrationComponent",
@@ -70,7 +70,7 @@ export default {
               }
             })
             .catch(error => {
-              errorHandler(error.response.status, "res", "reg")
+              utils(error.response.status, "res", "reg")
               // document.getElementById("res").innerHTML = "что-то не так";
             });
       }

@@ -42,7 +42,20 @@ export default {
   </main>
 </template>
 
-<style scoped>
+<style>
+
+.but{
+  background-color: deeppink;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: large;
+  //margin-top: 30px;
+  //margin-bottom: 30px;
+}
+.but:hover, .but:focus{
+  background-color: lightpink;
+}
+
 header {
   line-height: 1.5;
 }
