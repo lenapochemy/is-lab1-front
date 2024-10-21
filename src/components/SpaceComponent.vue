@@ -2,7 +2,7 @@
 
 import {api} from "@/axios.js";
 import {utils} from "@/js/utils.js";
-import UpdateComponent from "@/components/UpdateComponent.vue";
+import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
 
 export default{
   name: "SpaceComponent",
@@ -12,44 +12,9 @@ export default{
       spaceMarines: [],
       coords: [],
       chapters: [],
-
-      spaceMarine: {
-        name: '',
-        coordinates: {
-          id: '',
-          x: '',
-          y: '',
-        },
-        chapter: {
-          id: '',
-          name: '',
-          parentLegion: ''
-        },
-        health: '',
-        category: '',
-        weaponType: null,
-        meleeWeapon: null
-      },
-      // coordinates: {
-      //   id: '',
-      //   x: '',
-      //   y: ''
-      // },
-      // chapter: {
-      //   id: '',
-      //   name: '',
-      //   parentLegion: null
-      // },
-      chapterForDeleteId: ''
     }
   },
   methods: {
-    createErrorMessage(mess, param){
-      document.getElementById(param + "_error").innerHTML = mess;
-    },
-    cleanErrorMessage(param){
-      document.getElementById(param + "_error").innerHTML = null;
-    },
     getSpaceMarines: function(){
       api.get("/space/getSpaceMarine")
           .then(response => {
@@ -69,6 +34,7 @@ export default{
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes chapter";
               this.chapters = response.data;
+              this.$store.commit('setChapters', this.chapters);
             }
           })
           .catch(error => {
@@ -82,7 +48,8 @@ export default{
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
               this.coords = response.data;
-              localStorage.setItem("coords", this.coords)
+              // localStorage.setItem("coords", this.coords)
+              this.$store.commit('setCoords', this.coords);
             }
           })
           .catch(error => {
@@ -91,84 +58,16 @@ export default{
 
     },
     addSpaceMarine: function() {
-      // console.log(this.coords);
-      // console.log(this.chapters);
-      // let coords_for_add = [];
-      // let chapters_for_add = [];
-      //
-      // for (let coord in this.coords){
-      //   this.coordinates.id = coord.id;
-      //   this.coordinates.x = coord.x;
-      //   this.coordinates.y = coord.y;
-      //   coords_for_add.push(this.coordinates);
-      // }
-      //
-      // for(let chap in this.chapters){
-      //   this.chapter.id = chap.id;
-      //   this.chapter.name = chap.name;
-      //   this.chapter.parentLegion = chap.parentLegion;
-      //   chapters_for_add.push(this.chapter);
-      // }
-      //
-      // console.log(coords_for_add)
-      // console.log(chapters_for_add)
-      // this.$router.push({name: 'add-space-marine-page', state: {coords: coords_for_add, chapters: chapters_for_add}})
-
-
-      if(this.validateName() && this.validateCoords() && this.validateChapter() &&
-          this.validateHealth() && this.validateCategory()) {
-        api.post("/space/addSpaceMarine", this.spaceMarine, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-            .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
-              this.getSpaceMarines();
-            })
-            .catch(error => {
-              utils(error.response.status, "res");
-            })
-      }
+      this.$router.push({name: 'add-space-marine-page'})
     },
     addChapter: function() {
       this.$router.push({name: 'add-chapter-page'})
-      // if(this.validateChapterName()) {
-      //   api.post("/space/newChapter", this.chapter, {
-      //     headers: {
-      //       "Content-Type": "application/json"
-      //     }
-      //   })
-      //       .then(response => {
-      //         document.getElementById("res").innerHTML = "ura add";
-      //         this.getChapters();
-      //       })
-      //       .catch(error => {
-      //         utils(error.response.status, "res");
-      //       })
-      // }
     },
     addCoordinate: function() {
       this.$router.push({name: 'add-coordinate-page'})
-      // console.log(this.validateCoordX() + this.validateCoordY())
-      // if(this.validateCoordX() && this.validateCoordY()) {
-      //   // console.log("in request")
-      //   api.post("/space/newCoord", this.coordinates, {
-      //     headers: {
-      //       "Content-Type": "application/json"
-      //     }
-      //   })
-      //       .then(response => {
-      //         document.getElementById("res").innerHTML = "ura add";
-      //         this.getCoordinates();
-      //       })
-      //       .catch(error => {
-      //         utils(error.response.status, "res");
-      //       })
-      // }
     },
-    deleteChapter: function(){
-      api.delete("/space/chapter/" + this.chapterForDeleteId)
+    deleteChapter: function(id){
+      api.delete("/space/chapter/" + id)
           .then(response => {
             document.getElementById("res").innerHTML = "delete good";
             this.getChapters();
@@ -201,114 +100,6 @@ export default{
             utils(error.response.status, "res");
           })
     },
-    validateName(){
-      if(this.spaceMarine.name == ""){
-        this.createErrorMessage("Name can't be empty", "name");
-        return false;
-      } else {
-        this.cleanErrorMessage("name");
-        return true;
-      }
-    },
-    validateCoords(){
-      // console.log("in coord validate" + this.spaceMarine.coordinates.id)
-      if(this.spaceMarine.coordinates.id == undefined || this.spaceMarine.coordinates.id == ""){
-        this.createErrorMessage("Coordinates can't be empty", "coord");
-        return false;
-      } else {
-        this.cleanErrorMessage("coord");
-        return true;
-      }
-    },
-    validateChapter(){
-      // if(this.spaceMarine.chapter == undefined || )
-      // console.log("in chapter validate" + this.spaceMarines.chapter)
-      if(this.spaceMarine.chapter.id == null || this.spaceMarine.chapter.id == ""){
-        this.createErrorMessage("Chapter can't be empty", "chapter");
-        return false;
-      } else {
-        this.cleanErrorMessage("chapter");
-        return true;
-      }
-    },
-    validateHealth(){
-      if(this.spaceMarine.health == ""){
-        this.createErrorMessage("Health can't be empty", "health");
-        return false;
-      } else {
-        this.spaceMarine.health.replace(",", ".");
-        let health = this.spaceMarine.health;
-        if (!(!isNaN(parseFloat(health)) && isFinite(health))) {
-          this.createErrorMessage("Health should be a number", "health");
-          return false;
-        } else if (health <= 0) {
-          this.createErrorMessage("Health should be a number, more than 0", "health");
-          return false;
-        } else {
-          this.cleanErrorMessage("health");
-          return true;
-        }
-      }
-    },
-    validateCategory(){
-      // console.log(this.spaceMarine.category)
-      if(this.spaceMarine.category == ""){
-        this.createErrorMessage("Category can't be empty", "category");
-        return false;
-      } else {
-        this.cleanErrorMessage("category");
-        return true;
-      }
-    },
-    // validateCoordX(){
-    //   // console.log("in validate x");
-    //   // console.log(this.coordinates.x);
-    //   if(this.coordinates.x == ""){
-    //     this.createErrorMessage("Coordinate X can't be empty", "coord_x");
-    //     return false;
-    //   } else {
-    //     this.coordinates.x.replace(",", ".");
-    //     let x = this.coordinates.x;
-    //     if (!(!isNaN(parseFloat(x)) && isFinite(x))) {
-    //       this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
-    //       return false;
-    //     } else {
-    //       if (x <= -147) {
-    //         this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
-    //         return false;
-    //       } else {
-    //         this.cleanErrorMessage("coord_x");
-    //         return true;
-    //       }
-    //     }
-    //   }
-    // },
-    // validateCoordY(){
-    //   // console.log("in validate y");
-    //   if(this.coordinates.y == ""){
-    //     this.createErrorMessage("Coordinate Y can't be empty", "coord_y");
-    //     return false;
-    //   } else {
-    //     this.coordinates.y.replace(",", ".");
-    //     let y = this.coordinates.y;
-    //     if (isNaN(parseFloat(y))) {
-    //       this.createErrorMessage("Coordinate Y should be a number", "coord_y");
-    //       return false;
-    //     } else {
-    //       this.cleanErrorMessage("coord_y");
-    //       return true;
-    //     }
-    //   }
-    // },
-    // validateChapterName(){
-    //   if(this.chapter.name == ""){
-    //     this.createErrorMessage("Chapter name can't be empty", "chapter_name");
-    //     return false;
-    //   } else {
-    //     this.cleanErrorMessage("chapter_name");
-    //     return true;
-    //   }
-    // }
   },
   mounted() {
     this.getCoordinates();
@@ -334,12 +125,12 @@ export default{
 
 
 
-  <form @submit.prevent="deleteChapter">
-    <select v-model="chapterForDeleteId">
-      <option v-for="chapter in chapters" v-bind:value="chapter.id">name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
-    </select>
-    <input class="but" type="submit" value="delete chapter">
-  </form>
+<!--  <form @submit.prevent="deleteChapter">-->
+<!--    <select v-model="chapterForDeleteId">-->
+<!--      <option v-for="chapter in chapters" v-bind:value="chapter.id">name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>-->
+<!--    </select>-->
+<!--    <input class="but" type="submit" value="delete chapter">-->
+<!--  </form>-->
 
   <table border="1" id="coord_table">
     <thead>
@@ -381,6 +172,9 @@ export default{
       <td>{{chapter.id}}</td>
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
+      <td><form @submit.prevent="deleteChapter(chapter.id)">
+        <input type="submit" value="delete"/>
+      </form></td>
     </tr>
     </tbody>
   </table>
@@ -427,133 +221,11 @@ export default{
     </tbody>
   </table>
 
-<!--  <div>-->
-<!--    <form @submit.prevent="addSpaceMarine">-->
-<!--      <input class="but" type="submit" value="add new space marine">-->
-<!--    </form>-->
-<!--  </div>-->
-
-<!--  <form id="coord">-->
-<!--    <span>COORDINATES:</span>-->
-<!--    <div>-->
-<!--      <span>coordinate X:</span>-->
-<!--      <input type="text" v-model="coordinates.x" @change="validateCoordX"/>-->
-<!--      <span class="error" id="coord_x_error"/>-->
-<!--&lt;!&ndash;      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>&ndash;&gt;-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <span>coordinate Y:</span>-->
-<!--      <input type="text" v-model="coordinates.y" @change="validateCoordY"/>-->
-<!--      <span class="error" id="coord_y_error"/>-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <input class="but"  type="submit" @click.prevent="addCoordinate" value="add"/>-->
-<!--    </div>-->
-<!--  </form>-->
-
-<!--  <form id="chapter">-->
-<!--    <span>CHAPTER:</span>-->
-<!--    <div>-->
-<!--      <span>chapter name:</span>-->
-<!--      <input type="text" v-model="chapter.name" @change="validateChapterName"/>-->
-<!--      <span class="error" id="chapter_name_error"/>-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <span>chapter parent legion:</span>-->
-<!--      <input type="text" v-model="chapter.parentLegion"/>-->
-<!--&lt;!&ndash;      <span id="chapter_parent_error"/>&ndash;&gt;-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <input type="submit" @click.prevent="addChapter()" value="add"/>-->
-<!--    </div>-->
-<!--  </form>-->
-
-
-  <form id="spaceMarine">
-    <span>SPACE MARINE:</span>
-    <div>
-      <span>name:</span>
-      <input type="text" v-model="spaceMarine.name" @change="validateName"/>
-      <span class="error" id="name_error"/>
-    </div>
-
-    <div>
-      <span>Coordinates:</span>
-      <select v-model="spaceMarine.coordinates.id" @change="validateCoords">
-        <option v-for="coord in coords" v-bind:value="coord.id">X={{coord.x}}, Y={{coord.y}}</option>
-      </select>
-      <span class="error" id="coord_error"/>
-    </div>
-
-    <div>
-      <span>Chapter:</span>
-      <select v-model="spaceMarine.chapter.id" @change="validateChapter">
-        <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
-      </select>
-
-      <span class="error" id="chapter_error"/>
-    </div>
-
-    <div>
-      <span>health:</span>
-      <input type="text" v-model="spaceMarine.health" @change="validateHealth"/>
-      <span class="error" id="health_error"/>
-    </div>
-
-    <div>
-      <span>astartes category:</span>
-      <br/>
-      <input type="radio" id="scout" value="SCOUT" v-model="spaceMarine.category" @change="validateCategory"/>
-      <label for="scout">scout</label>
-      <br/>
-      <input type="radio" id="tactical" value="TACTICAL" v-model="spaceMarine.category" @change="validateCategory"/>
-      <label for="tactical">tactical</label>
-      <br/>
-      <input type="radio" id="chaplain" value="CHAPLAIN" v-model="spaceMarine.category" @change="validateCategory"/>
-      <label for="chaplain">chaplain</label>
-      <br/>
-      <span class="error" id="category_error"/>
-    </div>
-
-    <div>
-      <span>weapon:</span>
-      <br/>
-      <input type="radio" id="boltgun" value="BOLTGUN" v-model="spaceMarine.weaponType"/>
-      <label for="boltgun">boltgun</label>
-      <br/>
-      <input type="radio" id="combi" value="COMBI_PLASMA_GUN" v-model="spaceMarine.weaponType"/>
-      <label for="combi">combi plasma gun</label>
-      <br/>
-      <input type="radio" id="grav" value="GRAV_GUN" v-model="spaceMarine.weaponType"/>
-      <label for="grav">grav gun</label>
-      <br/>
-      <input type="radio" id="inferno" value="INFERNO_PISTOL" v-model="spaceMarine.weaponType"/>
-      <label for="inferno">inferno pistol</label>
-<!--      <span id="weapon_error"/>-->
-    </div>
-
-    <div>
-      <span>melee weapon:</span>
-      <br/>
-      <input type="radio" id="chain" value="CHAIN_AXE" v-model="spaceMarine.meleeWeapon"/>
-      <label for="chain">chain axe</label>
-      <br/>
-      <input type="radio" id="claw" value="LIGHTING_CLAW" v-model="spaceMarine.meleeWeapon"/>
-      <label for="claw">lighting claw</label>
-      <br/>
-      <input type="radio" id="blade" value="POWER_BLADE" v-model="spaceMarine.meleeWeapon"/>
-      <label for="blade">power blade</label>
-<!--      <span id="melee_error"/>-->
-    </div>
-
-    <div>
-      <input class="but"  type="submit" @click.prevent="addSpaceMarine()" value="add"/>
-    </div>
-  </form>
+  <div>
+    <form @submit.prevent="addSpaceMarine">
+      <input class="but" type="submit" value="add new space marine">
+    </form>
+  </div>
 
 </template>
 

@@ -38,7 +38,7 @@ export default{
           }
         })
             .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
+              // document.getElementById("res").innerHTML = "ura add";
               // this.getSpaceMarines();
               this.$router.push({name: 'main-page'})
             })
@@ -52,7 +52,7 @@ export default{
         createErrorMessage("Name can't be empty", "name_error");
         return false;
       } else {
-        cleanErrorMessage("name");
+        cleanErrorMessage("name_error");
         return true;
       }
     },
@@ -111,8 +111,12 @@ export default{
     }
   },
   mounted() {
-    this.coords = this.$router.state.coords;
-    this.chapters = this.$router.state.chapters;
+    this.coords = this.$store.state.coords;
+    this.chapters = this.$store.state.chapters;
+    // console.log(this.coords)
+    // console.log(this.$store.state.coords)
+    // this.coords = this.$router.state.coords;
+    // this.chapters = this.$router.state.chapters;
     // this.coords = localStorage.getItem("coords")
   }
 }

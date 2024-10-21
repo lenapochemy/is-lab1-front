@@ -32,11 +32,11 @@ const router = createRouter({
             name: 'add-coordinate-page',
             component: AddCoordinateComponent
         },
-        // {
-        //     path: '/addSpaceMarine',
-        //     name: 'add-space-marine-page',
-        //     component: AddSpaceMarineComponent
-        // }
+        {
+            path: '/addSpaceMarine',
+            name: 'add-space-marine-page',
+            component: AddSpaceMarineComponent
+        }
     ]
 })
 
