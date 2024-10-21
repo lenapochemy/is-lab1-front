@@ -25,8 +25,8 @@ export default{
         },
         health: '',
         category: '',
-        weaponType: '',
-        meleeWeapon: ''
+        weaponType: null,
+        meleeWeapon: null
       },
       coordinates: {
         x: '',
@@ -34,12 +34,18 @@ export default{
       },
       chapter: {
         name: '',
-        parentLegion: ''
+        parentLegion: null
       },
       chapterForDeleteId: ''
     }
   },
   methods: {
+    createErrorMessage(mess, param){
+      document.getElementById(param + "_error").innerHTML = mess;
+    },
+    cleanErrorMessage(param){
+      document.getElementById(param + "_error").innerHTML = null;
+    },
     getSpaceMarines: function(){
       api.get("/space/getSpaceMarine")
           .then(response => {
@@ -80,46 +86,55 @@ export default{
 
     },
     addSpaceMarine: function() {
-      api.post("/space/addSpaceMarine", this.spaceMarine, {
-        headers: {
-          "Content-Type" : "application/json"
-        }
-      })
-          .then(response => {
-            document.getElementById("res").innerHTML = "ura add";
-            this.getSpaceMarines();
-          })
-          .catch(error => {
-            errorHandler(error.response.status, "res");
-          })
+      if(this.validateName() && this.validateCoords() && this.validateChapter() &&
+          this.validateHealth() && this.validateCategory()) {
+        api.post("/space/addSpaceMarine", this.spaceMarine, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+            .then(response => {
+              document.getElementById("res").innerHTML = "ura add";
+              this.getSpaceMarines();
+            })
+            .catch(error => {
+              errorHandler(error.response.status, "res");
+            })
+      }
     },
     addChapter: function() {
-      api.post("/space/newChapter", this.chapter, {
-        headers: {
-          "Content-Type" : "application/json"
-        }
-      })
-          .then(response => {
-            document.getElementById("res").innerHTML = "ura add";
-            this.getChapters();
-          })
-          .catch(error => {
-            errorHandler(error.response.status, "res");
-          })
+      if(this.validateChapterName()) {
+        api.post("/space/newChapter", this.chapter, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+            .then(response => {
+              document.getElementById("res").innerHTML = "ura add";
+              this.getChapters();
+            })
+            .catch(error => {
+              errorHandler(error.response.status, "res");
+            })
+      }
     },
-    addCoordination: function() {
-      api.post("/space/newCoord", this.coordinates, {
-        headers: {
-          "Content-Type" : "application/json"
-        }
-      })
-          .then(response => {
-            document.getElementById("res").innerHTML = "ura add";
-            this.getCoordinates();
-          })
-          .catch(error => {
-            errorHandler(error.response.status, "res");
-          })
+    addCoordinate: function() {
+      // console.log(this.validateCoordX() + this.validateCoordY())
+      if(this.validateCoordX() && this.validateCoordY()) {
+        // console.log("in request")
+        api.post("/space/newCoord", this.coordinates, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+            .then(response => {
+              document.getElementById("res").innerHTML = "ura add";
+              this.getCoordinates();
+            })
+            .catch(error => {
+              errorHandler(error.response.status, "res");
+            })
+      }
     },
     deleteChapter: function(){
       api.delete("/space/chapter/" + this.chapterForDeleteId)
@@ -154,6 +169,114 @@ export default{
           .catch(error => {
             errorHandler(error.response.status, "res");
           })
+    },
+    validateName(){
+      if(this.spaceMarine.name == ""){
+        this.createErrorMessage("Name can't be empty", "name");
+        return false;
+      } else {
+        this.cleanErrorMessage("name");
+        return true;
+      }
+    },
+    validateCoords(){
+      // console.log("in coord validate" + this.spaceMarine.coordinates.id)
+      if(this.spaceMarine.coordinates.id == undefined || this.spaceMarine.coordinates.id == ""){
+        this.createErrorMessage("Coordinates can't be empty", "coord");
+        return false;
+      } else {
+        this.cleanErrorMessage("coord");
+        return true;
+      }
+    },
+    validateChapter(){
+      // if(this.spaceMarine.chapter == undefined || )
+      // console.log("in chapter validate" + this.spaceMarines.chapter)
+      if(this.spaceMarine.chapter.id == null || this.spaceMarine.chapter.id == ""){
+        this.createErrorMessage("Chapter can't be empty", "chapter");
+        return false;
+      } else {
+        this.cleanErrorMessage("chapter");
+        return true;
+      }
+    },
+    validateHealth(){
+      if(this.spaceMarine.health == ""){
+        this.createErrorMessage("Health can't be empty", "health");
+        return false;
+      } else {
+        this.spaceMarine.health.replace(",", ".");
+        let health = this.spaceMarine.health;
+        if (!(!isNaN(parseFloat(health)) && isFinite(health))) {
+          this.createErrorMessage("Health should be a number", "health");
+          return false;
+        } else if (health <= 0) {
+          this.createErrorMessage("Health should be a number, more than 0", "health");
+          return false;
+        } else {
+          this.cleanErrorMessage("health");
+          return true;
+        }
+      }
+    },
+    validateCategory(){
+      // console.log(this.spaceMarine.category)
+      if(this.spaceMarine.category == ""){
+        this.createErrorMessage("Category can't be empty", "category");
+        return false;
+      } else {
+        this.cleanErrorMessage("category");
+        return true;
+      }
+    },
+    validateCoordX(){
+      // console.log("in validate x");
+      // console.log(this.coordinates.x);
+      if(this.coordinates.x == ""){
+        this.createErrorMessage("Coordinate X can't be empty", "coord_x");
+        return false;
+      } else {
+        this.coordinates.x.replace(",", ".");
+        let x = this.coordinates.x;
+        if (!(!isNaN(parseFloat(x)) && isFinite(x))) {
+          this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
+          return false;
+        } else {
+          if (x <= -147) {
+            this.createErrorMessage("Coordinate X should be a number, more than -147", "coord_x");
+            return false;
+          } else {
+            this.cleanErrorMessage("coord_x");
+            return true;
+          }
+        }
+      }
+    },
+    validateCoordY(){
+      // console.log("in validate y");
+      if(this.coordinates.y == ""){
+        this.createErrorMessage("Coordinate Y can't be empty", "coord_y");
+        return false;
+      } else {
+        this.coordinates.y.replace(",", ".");
+        let y = this.coordinates.y;
+        if (isNaN(parseFloat(y))) {
+          this.createErrorMessage("Coordinate Y should be a number", "coord_y");
+          return false;
+        } else {
+          this.cleanErrorMessage("coord_y");
+          return true;
+        }
+      }
+    },
+    validateChapterName(){
+      if(this.chapter.name == ""){
+        this.createErrorMessage("Chapter name can't be empty", "chapter_name");
+        return false;
+      } else {
+        this.cleanErrorMessage("chapter_name");
+        return true;
+      }
     }
   },
   mounted() {
@@ -264,18 +387,19 @@ export default{
     <span>COORDINATES:</span>
     <div>
       <span>coordinate X:</span>
-      <input type="text" v-model="coordinates.x" required min="-146"/>
+      <input type="text" v-model="coordinates.x" @change="validateCoordX"/>
+      <span class="error" id="coord_x_error"/>
 <!--      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>-->
     </div>
 
     <div>
       <span>coordinate Y:</span>
-      <input type="text" v-model="coordinates.y" required/>
-
+      <input type="text" v-model="coordinates.y" @change="validateCoordY"/>
+      <span class="error" id="coord_y_error"/>
     </div>
 
     <div>
-      <input type="submit" @click.prevent="addCoordination" value="add"/>
+      <input type="submit" @click.prevent="addCoordinate" value="add"/>
     </div>
   </form>
 
@@ -283,12 +407,14 @@ export default{
     <span>CHAPTER:</span>
     <div>
       <span>chapter name:</span>
-      <input type="text" v-model="chapter.name" required/>
+      <input type="text" v-model="chapter.name" @change="validateChapterName"/>
+      <span class="error" id="chapter_name_error"/>
     </div>
 
     <div>
       <span>chapter parent legion:</span>
       <input type="text" v-model="chapter.parentLegion"/>
+<!--      <span id="chapter_parent_error"/>-->
     </div>
 
     <div>
@@ -301,50 +427,50 @@ export default{
     <span>SPACE MARINE:</span>
     <div>
       <span>name:</span>
-      <input type="text" v-model="spaceMarine.name"/>
+      <input type="text" v-model="spaceMarine.name" @change="validateName"/>
+      <span class="error" id="name_error"/>
     </div>
-
-<!--    <div>-->
-<!--      <span>coordinate id:</span>-->
-<!--      <input type="text" v-model="spaceMarine.coordinates.id"/>-->
-<!--    </div>-->
-
-<!--    <div>-->
-<!--      <span>chapter id:</span>-->
-<!--      <input type="text" v-model="spaceMarine.chapter.id"/>-->
-<!--    </div>-->
 
     <div>
       <span>Coordinates:</span>
-      <select v-model="spaceMarine.coordinates.id">
+      <select v-model="spaceMarine.coordinates.id" @change="validateCoords">
         <option v-for="coord in coords" v-bind:value="coord.id">X={{coord.x}}, Y={{coord.y}}</option>
       </select>
+      <span class="error" id="coord_error"/>
     </div>
 
     <div>
       <span>Chapter:</span>
-      <select v-model="spaceMarine.chapter.id">
-        <option v-for="chapter in chapters" v-bind:value="chapter.id">name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
+      <select v-model="spaceMarine.chapter.id" @change="validateChapter">
+        <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
       </select>
+<!--      <div v-for="chapter in chapters">-->
+<!--        <input type="radio" v-model="spaceMarine.chapter.id"  v-bind:value="chapter.id" @change="validateChapter"/>-->
+<!--        <label>name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</label>-->
+<!--      </div>-->
+
+      <span class="error" id="chapter_error"/>
     </div>
 
     <div>
       <span>health:</span>
-      <input type="text" v-model="spaceMarine.health"/>
+      <input type="text" v-model="spaceMarine.health" @change="validateHealth"/>
+      <span class="error" id="health_error"/>
     </div>
 
     <div>
       <span>astartes category:</span>
       <br/>
-      <input type="radio" id="scout" value="SCOUT" v-model="spaceMarine.category"/>
+      <input type="radio" id="scout" value="SCOUT" v-model="spaceMarine.category" @change="validateCategory"/>
       <label for="scout">scout</label>
       <br/>
-      <input type="radio" id="tactical" value="TACTICAL" v-model="spaceMarine.category"/>
+      <input type="radio" id="tactical" value="TACTICAL" v-model="spaceMarine.category" @change="validateCategory"/>
       <label for="tactical">tactical</label>
       <br/>
-      <input type="radio" id="chaplain" value="CHAPLAIN" v-model="spaceMarine.category"/>
+      <input type="radio" id="chaplain" value="CHAPLAIN" v-model="spaceMarine.category" @change="validateCategory"/>
       <label for="chaplain">chaplain</label>
       <br/>
+      <span class="error" id="category_error"/>
     </div>
 
     <div>
@@ -361,7 +487,7 @@ export default{
       <br/>
       <input type="radio" id="inferno" value="INFERNO_PISTOL" v-model="spaceMarine.weaponType"/>
       <label for="inferno">inferno pistol</label>
-
+<!--      <span id="weapon_error"/>-->
     </div>
 
     <div>
@@ -375,6 +501,7 @@ export default{
       <br/>
       <input type="radio" id="blade" value="POWER_BLADE" v-model="spaceMarine.meleeWeapon"/>
       <label for="blade">power blade</label>
+<!--      <span id="melee_error"/>-->
     </div>
 
     <div>
@@ -387,5 +514,8 @@ export default{
 <style scoped>
 .error input {
   border-color: red;
+}
+.error {
+  color: red;
 }
 </style>

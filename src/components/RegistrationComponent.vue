@@ -4,11 +4,13 @@
   <form @submit.prevent="registration">
     <div>
       <label for="login">Логин </label>
-      <input type="text" id="login" name="login" v-model="regData.login" required>
+      <input type="text" id="login" name="login" v-model="regData.login" @change="validateLogin" >
+      <span id="login_error"/>
     </div>
     <div>
       <label for="password">Пароль </label>
-      <input type="password" id="password" name="password" v-model="regData.password" required>
+      <input type="password" id="password" name="password" v-model="regData.password" @change="validatePassword">
+      <span id="password_error"/>
     </div>
     <input class="but" type="submit" value="Зарегистрироваться">
   </form>
@@ -31,22 +33,47 @@ export default {
     }
   },
   methods: {
+    createErrorMessage(mess, param){
+      document.getElementById(param + "_error").innerHTML = mess;
+    },
+    cleanErrorMessage(param){
+      document.getElementById(param + "_error").innerHTML = null;
+    },
+    validateLogin(){
+      if(this.regData.login == ""){
+        this.createErrorMessage("Login can't be empty", "login");
+        return false;
+      } else {
+        this.cleanErrorMessage("login");
+        return true;
+      }
+    },
+    validatePassword(){
+      if(this.regData.password == ""){
+        this.createErrorMessage("Password can't be empty", "password");
+        return false;
+      } else {
+        this.cleanErrorMessage("password");
+        return true;
+      }
+    },
     registration: function (){
-      api.post("/user/reg", this.regData, {
-        headers: {
-          "Content-Type" : "application/json"
-        }
-      })
-          .then(response => {
-            if(response.status === 200){
-              document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";
-            }
-          })
-          .catch(error => {
-             errorHandler(error.response.status, "res", "reg")
-            // document.getElementById("res").innerHTML = "что-то не так";
-          });
-
+      if(this.validateLogin() && this.validatePassword()) {
+        api.post("/user/reg", this.regData, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+            .then(response => {
+              if (response.status === 200) {
+                document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";
+              }
+            })
+            .catch(error => {
+              errorHandler(error.response.status, "res", "reg")
+              // document.getElementById("res").innerHTML = "что-то не так";
+            });
+      }
     }
   }
 }
