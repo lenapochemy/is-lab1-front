@@ -4,6 +4,7 @@ import MainView from "@/views/MainView.vue";
 import AddChapterComponent from "@/components/AddChapterComponent.vue";
 import AddCoordinateComponent from "@/components/AddCoordinateComponent.vue";
 import AddSpaceMarineComponent from "@/components/AddSpaceMarineComponent.vue";
+import UpdateCoordinatesComponent from "@/components/UpdateCoordinatesComponent.vue";
 
 
 const router = createRouter({
@@ -36,7 +37,12 @@ const router = createRouter({
             path: '/addSpaceMarine',
             name: 'add-space-marine-page',
             component: AddSpaceMarineComponent
-        }
+        },
+        {
+            path: '/updateCoordinate',
+            name: 'update-coordinate-page',
+            component: UpdateCoordinatesComponent
+        },
     ]
 })
 

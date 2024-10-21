@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {utils} from "@/js/utils.js";
+import {errorHandler} from "@/js/utils.js";
 import {createErrorMessage, cleanErrorMessage} from "@/js/utils.js";
 
 export default {
@@ -27,7 +27,7 @@ export default {
               this.$router.push({name: 'main-page'})
             })
             .catch(error => {
-              utils(error.response.status, "res");
+              errorHandler(error.response.status, "res");
             })
       }
     },
@@ -59,7 +59,7 @@ export default {
       } else {
         this.coordinates.y.replace(",", ".");
         let y = this.coordinates.y;
-        if (isNaN(parseFloat(y))) {
+        if (!(!isNaN(parseFloat(y)) && isFinite(y))) {
           createErrorMessage("Coordinate Y should be a number", "coord_y_error");
           return false;
         } else {

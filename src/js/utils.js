@@ -1,4 +1,4 @@
-export function utils(status, mess, mode){
+export function errorHandler(status, mess, mode){
     switch (status){
         case 400:
             document.getElementById(mess).innerHTML = "Неверные данные";

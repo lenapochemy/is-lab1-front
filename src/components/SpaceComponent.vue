@@ -1,7 +1,7 @@
 <script>
 
 import {api} from "@/axios.js";
-import {utils} from "@/js/utils.js";
+import {errorHandler} from "@/js/utils.js";
 import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
 
 export default{
@@ -74,7 +74,7 @@ export default{
             this.getSpaceMarines();
           })
           .catch(error => {
-            utils(error.response.status, "res");
+            errorHandler(error.response.status, "res");
           })
     },
     deleteCoord: function (id){
@@ -85,7 +85,7 @@ export default{
             this.getSpaceMarines();
           })
           .catch(error => {
-            utils(error.response.status, "res");
+            errorHandler(error.response.status, "res");
           })
     },
     deleteSpaceMarine: function (id){
@@ -97,9 +97,15 @@ export default{
             this.getCoordinates();
           })
           .catch(error => {
-            utils(error.response.status, "res");
+            errorHandler(error.response.status, "res");
           })
     },
+    updateCoord(coord){
+      this.$store.commit('setCoordId', coord.id);
+      this.$store.commit('setCoordX', coord.x);
+      this.$store.commit('setCoordY', coord.y);
+      this.$router.push({name: 'update-coordinate-page'})
+    }
   },
   mounted() {
     this.getCoordinates();
@@ -145,10 +151,11 @@ export default{
       <td>{{coord.y}}</td>
       <td>
         <form @submit.prevent="deleteCoord(coord.id)">
-          <input type="submit" value="delete"/>
+          <input class="but" type="submit" value="delete"/>
         </form>
-<!--        <button value="edit" onclick=""-->
-<!--        <UpdateComponent v-bind:></UpdateComponent>-->
+        <form @submit.prevent="updateCoord(coord)">
+          <input class="but" type="submit" value="update">
+        </form>
       </td>
     </tr>
     </tbody>
@@ -173,7 +180,7 @@ export default{
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
       <td><form @submit.prevent="deleteChapter(chapter.id)">
-        <input type="submit" value="delete"/>
+        <input class="but" type="submit" value="delete"/>
       </form></td>
     </tr>
     </tbody>
@@ -214,7 +221,7 @@ export default{
       <td>{{marine.meleeWeapon}}</td>
       <td>
         <form @submit.prevent="deleteSpaceMarine(marine.id)">
-          <input type="submit" value="delete"/>
+          <input class="but" type="submit" value="delete"/>
         </form>
       </td>
     </tr>

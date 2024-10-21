@@ -26,7 +26,7 @@
 
 <script>
 import {api} from "@/axios";
-import {utils} from "@/js/utils.js";
+import {errorHandler} from "@/js/utils.js";
 // import useValidate from "@vuelidate/core"
 // import {required} from "@vuelidate/validators"
 // import router from "@/router.js";
@@ -105,7 +105,7 @@ export default {
               }
             })
             .catch(error => {
-              utils(error.response.status, "res");
+              errorHandler(error.response.status, "res");
               // document.getElementById("res").innerHTML = "vse bad";
             });
       // } else {
