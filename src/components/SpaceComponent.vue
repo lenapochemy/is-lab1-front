@@ -12,15 +12,31 @@ export default{
       spaceMarines: [],
       coords: [],
       chapters: [],
+
+      currentCoordPage: 0,
+      currentCoordParam: 'id',
+      totalCoordPages: 0,
+
+      currentChapterPage: 0,
+      currentChapterParam: 'id',
+      totalChapterPages: 0,
+
+      currentMarinePage: 0,
+      currentMarineParam: 'id',
+      totalMarinePages: 0,
     }
   },
   methods: {
-    getSpaceMarines: function(){
-      api.get("/space/getSpaceMarine")
+    getSpaceMarines: function(param){
+      if(param != null){
+        this.currentMarineParam = param;
+      }
+      api.get("/space/getSpaceMarine/" + this.currentMarineParam + "/" + this.currentMarinePage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
-              this.spaceMarines = response.data;
+              this.spaceMarines = response.data.content;
+              this.totalMarinePages = response.data.totalPages;
             }
           })
           .catch(error => {
@@ -28,12 +44,16 @@ export default{
           })
 
     },
-    getChapters: function(){
-      api.get("/space/getChapter")
+    getChapters: function(param){
+      if(param != null){
+        this.currentChapterParam = param;
+      }
+      api.get("/space/getChapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes chapter";
-              this.chapters = response.data;
+              this.chapters = response.data.content;
+              this.totalChapterPages = response.data.totalPages;
               this.$store.commit('setChapters', this.chapters);
             }
           })
@@ -42,12 +62,16 @@ export default{
           })
 
     },
-    getCoordinates: function(){
-      api.get("/space/getCoord")
+    getCoordinates: function(param){
+      if(param != null) {
+        this.currentCoordParam = param;
+      }
+      api.get("/space/getCoord/" + this.currentCoordParam + "/" + this.currentCoordPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
-              this.coords = response.data;
+              this.coords = response.data.content;
+              this.totalCoordPages = response.data.totalPages;
               // localStorage.setItem("coords", this.coords)
               this.$store.commit('setCoords', this.coords);
             }
@@ -55,7 +79,30 @@ export default{
           .catch(error => {
             document.getElementById("res").innerHTML = error;
           })
-
+    },
+    getPrevPageCoordinates(){
+      this.currentCoordPage--;
+      this.getCoordinates();
+    },
+    getNextPageCoordinates(){
+      this.currentCoordPage++;
+      this.getCoordinates();
+    },
+    getPrevPageChapter(){
+      this.currentChapterPage--;
+      this.getChapters();
+    },
+    getNextPageChapter(){
+      this.currentChapterPage++;
+      this.getChapters();
+    },
+    getPrevPageMarine(){
+      this.currentMarinePage--;
+      this.getSpaceMarines();
+    },
+    getNextPageMarine(){
+      this.currentMarinePage++;
+      this.getSpaceMarines();
     },
     addSpaceMarine: function() {
       this.$store.commit('setChapters', this.chapters);
@@ -104,16 +151,10 @@ export default{
     },
     updateCoord(coord){
       this.$store.commit('setCoord', coord);
-      // this.$store.commit('setCoordId', coord.id);
-      // this.$store.commit('setCoordX', coord.x);
-      // this.$store.commit('setCoordY', coord.y);
       this.$router.push({name: 'update-coordinate-page'})
     },
     updateChapter(chapter){
       this.$store.commit('setChapter', chapter);
-      // this.$store.commit('setChapterId', chapter.id);
-      // this.$store.commit('setChapterName', chapter.name);
-      // this.$store.commit('setChapterParentLegion', chapter.parentLegion);
       this.$router.push({name: 'update-chapter-page'})
     },
     updateSpaceMarine(spaceMarine){
@@ -124,6 +165,12 @@ export default{
     }
   },
   mounted() {
+    this.currentCoordPage = 0;
+    this.currentCoordParam = 'id';
+    this.currentChapterParam = 'id';
+    this.currentChapterPage = 0;
+    this.currentMarineParam = 'id';
+    this.currentMarinePage = 0;
     this.getCoordinates();
     this.getChapters();
     this.getSpaceMarines();
@@ -156,9 +203,9 @@ export default{
 
   <table border="1" id="coord_table">
     <thead>
-    <th>id</th>
-    <th>X</th>
-    <th>Y</th>
+    <th> <input class="but"  type="submit" @click.prevent="getCoordinates('id')" value="ID"/></th>
+    <th> <input class="but"  type="submit" @click.prevent="getCoordinates('x')" value="X"/></th>
+    <th> <input class="but"  type="submit" @click.prevent="getCoordinates('y')" value="Y"/></th>
     </thead>
     <tbody>
     <tr v-for="coord in coords">
@@ -174,15 +221,18 @@ export default{
   </table>
 
   <div>
+    <span>Page number {{currentCoordPage+1}}</span>
+    <input class="but"  type="submit" v-if="currentCoordPage > 0" @click.prevent="getPrevPageCoordinates" value="previous page"/>
+    <input class="but"  type="submit" v-if="currentCoordPage + 1 < totalCoordPages" @click.prevent="getNextPageCoordinates" value="next page"/>
     <input class="but"  type="submit" @click.prevent="addCoordinate" value="add new coordinate"/>
   </div>
 
 
   <table border="1" id="chapter_table">
     <thead>
-    <th>id</th>
-    <th>name</th>
-    <th>parent legion</th>
+    <th> <input class="but"  type="submit" @click.prevent="getChapters('id')" value="ID"/></th>
+    <th> <input class="but"  type="submit" @click.prevent="getChapters('name')" value="name"/></th>
+    <th> <input class="but"  type="submit" @click.prevent="getChapters('parentLegion')" value="parent legion"/></th>
     </thead>
     <tbody>
     <tr v-for="chapter in chapters">
@@ -198,22 +248,23 @@ export default{
   </table>
 
   <div>
+    <span>Page number {{currentChapterPage+1}}</span>
+    <input class="but"  type="submit" v-if="currentChapterPage > 0" @click.prevent="getPrevPageChapter" value="previous page"/>
+    <input class="but"  type="submit" v-if="currentChapterPage + 1 < totalChapterPages" @click.prevent="getNextPageChapter" value="next page"/>
     <input class="but"  type="submit" @click.prevent="addChapter" value="add new chapter"/>
   </div>
 
   <table border="1" id="space_marine_table">
     <thead>
-    <th>id</th>
-    <th>name</th>
-    <th>coord id</th>
-    <!--      <th>coord y</th>-->
-    <th>date time</th>
-    <th>chapter id</th>
-    <!--      <th>chapter parent legion</th>-->
-    <th>health</th>
-    <th>category</th>
-    <th>weapon type</th>
-    <th>melee weapon</th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('id')" value="ID"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('name')" value="name"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('coordinates')" value="coord id"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('creationDate')" value="date and time"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('chapter')" value="chapter id"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('health')" value="health"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('category')" value="category"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('weaponType')" value="weapon type"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('meleeWeapon')" value="melee weapon"/></th>
     </thead>
     <tbody>
     <tr v-for="marine in spaceMarines">
@@ -237,6 +288,9 @@ export default{
   </table>
 
   <div>
+    <span>Page number {{currentMarinePage+1}}</span>
+    <input class="but"  type="submit" v-if="currentMarinePage > 0" @click.prevent="getPrevPageMarine" value="previous page"/>
+    <input class="but"  type="submit" v-if="currentMarinePage + 1 < totalMarinePages" @click.prevent="getNextPageMarine" value="next page"/>
     <input class="but"  type="submit" @click.prevent="addSpaceMarine" value="add new space marine"/>
   </div>
 
