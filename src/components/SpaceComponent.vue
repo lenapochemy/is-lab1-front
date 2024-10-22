@@ -1,8 +1,9 @@
 <script>
 
 import {api} from "@/axios.js";
-import {errorHandler} from "@/js/utils.js";
+import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
 import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
+import {validateChapterName, validateFilterType} from "@/js/validation.js";
 
 export default{
   name: "SpaceComponent",
@@ -24,6 +25,11 @@ export default{
       currentMarinePage: 0,
       currentMarineParam: 'id',
       totalMarinePages: 0,
+
+      filterChapterType: '',
+      filterChapterParam: '',
+      inChapterFilter: false,
+
     }
   },
   methods: {
@@ -45,6 +51,7 @@ export default{
 
     },
     getChapters: function(param){
+      this.inChapterFilter = false;
       if(param != null){
         this.currentChapterParam = param;
       }
@@ -55,12 +62,41 @@ export default{
               this.chapters = response.data.content;
               this.totalChapterPages = response.data.totalPages;
               this.$store.commit('setChapters', this.chapters);
+              cleanErrorMessage("filter_chapter_error");
             }
           })
           .catch(error => {
             document.getElementById("res").innerHTML = error;
           })
-
+    },
+    filterChapter(){
+      console.log(this.filterChapterType);
+      console.log(this.filterChapterParam);
+      if(this.validateChapter() && this.validateChapterType()) {
+        this.inChapterFilter = true;
+        console.log("in request");
+        let url;
+        if (this.filterChapterType == "name") {
+          url = "/space/getChapterByName/"
+        } else {
+          url = "/space/getChapterByParentLegion/"
+        }
+        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
+            .then(response => {
+              if (response.status === 200) {
+                // document.getElementById("res").innerHTML = "yes chapter";
+                this.chapters = response.data.content;
+                if (this.chapters.length == 0) {
+                  document.getElementById("filter_chapter_error").innerHTML = "No find chapter with this " + this.filterChapterType;
+                }
+                this.totalChapterPages = response.data.totalPages;
+                // this.$store.commit('setChapters', this.chapters);
+              }
+            })
+            .catch(error => {
+              document.getElementById("res").innerHTML = error;
+            })
+      }
     },
     getCoordinates: function(param){
       if(param != null) {
@@ -162,6 +198,13 @@ export default{
       this.$store.commit('setCoords', this.coords);
       this.$store.commit('setSpaceMarine', spaceMarine);
       this.$router.push({name: 'update-space-marine-page'})
+    },
+    validateChapter(){
+      return validateChapterName(this.filterChapterParam);
+
+    },
+    validateChapterType(){
+      return validateFilterType(this.filterChapterType, "chapter");
     }
   },
   mounted() {
@@ -192,14 +235,6 @@ export default{
   </form>
   <span id="res"></span>
 
-
-
-<!--  <form @submit.prevent="deleteChapter">-->
-<!--    <select v-model="chapterForDeleteId">-->
-<!--      <option v-for="chapter in chapters" v-bind:value="chapter.id">name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>-->
-<!--    </select>-->
-<!--    <input class="but" type="submit" value="delete chapter">-->
-<!--  </form>-->
 
   <table border="1" id="coord_table">
     <thead>
@@ -246,6 +281,24 @@ export default{
     </tr>
     </tbody>
   </table>
+
+  <div id="filter">
+    <span>Filter for chapter:</span>
+    <form>
+      <select v-model="filterChapterType" @change="validateChapterType">
+        <option value="name">name </option>
+        <option value="parentLegion" >parent legion</option>
+      </select>
+      <input type="text" v-model="filterChapterParam" @change="validateChapter"/>
+      <input class="but" type="submit" @click.prevent="filterChapter()" value="filter"/>
+
+      <span class="error" id="filter_chapter_error"></span>
+      <span class="error" id="chapter_name_error"></span>
+    </form>
+    <input class="but" type="button" v-if="inChapterFilter" @click.prevent="getChapters()" value="delete filter"/>
+
+
+  </div>
 
   <div>
     <span>Page number {{currentChapterPage+1}}</span>

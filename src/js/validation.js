@@ -104,3 +104,13 @@ export function validateCategory(category){
         return true;
     }
 }
+
+export function validateFilterType(name, object){
+    if(name == ""){
+        createErrorMessage("Filter type can't be empty", "filter_" + object + "_error");
+        return false;
+    } else {
+        cleanErrorMessage("filter_" + object + "_error");
+        return true;
+    }
+}
