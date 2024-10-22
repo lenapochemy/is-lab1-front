@@ -58,6 +58,8 @@ export default{
 
     },
     addSpaceMarine: function() {
+      this.$store.commit('setChapters', this.chapters);
+      this.$store.commit('setCoords', this.coords);
       this.$router.push({name: 'add-space-marine-page'})
     },
     addChapter: function() {
@@ -101,10 +103,24 @@ export default{
           })
     },
     updateCoord(coord){
-      this.$store.commit('setCoordId', coord.id);
-      this.$store.commit('setCoordX', coord.x);
-      this.$store.commit('setCoordY', coord.y);
+      this.$store.commit('setCoord', coord);
+      // this.$store.commit('setCoordId', coord.id);
+      // this.$store.commit('setCoordX', coord.x);
+      // this.$store.commit('setCoordY', coord.y);
       this.$router.push({name: 'update-coordinate-page'})
+    },
+    updateChapter(chapter){
+      this.$store.commit('setChapter', chapter);
+      // this.$store.commit('setChapterId', chapter.id);
+      // this.$store.commit('setChapterName', chapter.name);
+      // this.$store.commit('setChapterParentLegion', chapter.parentLegion);
+      this.$router.push({name: 'update-chapter-page'})
+    },
+    updateSpaceMarine(spaceMarine){
+      this.$store.commit('setChapters', this.chapters);
+      this.$store.commit('setCoords', this.coords);
+      this.$store.commit('setSpaceMarine', spaceMarine);
+      this.$router.push({name: 'update-space-marine-page'})
     }
   },
   mounted() {
@@ -150,21 +166,15 @@ export default{
       <td>{{coord.x}}</td>
       <td>{{coord.y}}</td>
       <td>
-        <form @submit.prevent="deleteCoord(coord.id)">
-          <input class="but" type="submit" value="delete"/>
-        </form>
-        <form @submit.prevent="updateCoord(coord)">
-          <input class="but" type="submit" value="update">
-        </form>
+        <input class="but"  type="submit" @click.prevent="deleteCoord(coord.id)" value="delete"/>
+        <input class="but"  type="submit" @click.prevent="updateCoord(coord)" value="update"/>
       </td>
     </tr>
     </tbody>
   </table>
 
   <div>
-    <form @submit.prevent="addCoordinate">
-      <input class="but" type="submit" value="add new coordinate">
-    </form>
+    <input class="but"  type="submit" @click.prevent="addCoordinate" value="add new coordinate"/>
   </div>
 
 
@@ -179,17 +189,16 @@ export default{
       <td>{{chapter.id}}</td>
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
-      <td><form @submit.prevent="deleteChapter(chapter.id)">
-        <input class="but" type="submit" value="delete"/>
-      </form></td>
+      <td>
+          <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
+          <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
+      </td>
     </tr>
     </tbody>
   </table>
 
   <div>
-    <form @submit.prevent="addChapter">
-      <input class="but" type="submit" value="add new chapter">
-    </form>
+    <input class="but"  type="submit" @click.prevent="addChapter" value="add new chapter"/>
   </div>
 
   <table border="1" id="space_marine_table">
@@ -220,18 +229,15 @@ export default{
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
       <td>
-        <form @submit.prevent="deleteSpaceMarine(marine.id)">
-          <input class="but" type="submit" value="delete"/>
-        </form>
+        <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
+        <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
       </td>
     </tr>
     </tbody>
   </table>
 
   <div>
-    <form @submit.prevent="addSpaceMarine">
-      <input class="but" type="submit" value="add new space marine">
-    </form>
+    <input class="but"  type="submit" @click.prevent="addSpaceMarine" value="add new space marine"/>
   </div>
 
 </template>

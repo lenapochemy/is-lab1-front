@@ -3,11 +3,12 @@ import {api} from "@/axios.js";
 import {errorHandler} from "@/js/utils.js";
 import {validateCategory, validateChapter, validateCoords, validateHealth, validateName} from "@/js/validation.js";
 
-export default{
-  name: "AddSpaceMarineComponent",
+export default {
+  name: "UpdateSpaceMarine",
   data(){
     return {
       spaceMarine: {
+        id: '',
         name: '',
         coordinates: {
           id: '',
@@ -28,11 +29,19 @@ export default{
       chapters: []
     }
   },
-  methods: {
-    addSpaceMarine: function() {
+  mounted() {
+    this.spaceMarine = this.$store.state.spaceMarine;
+    this.coords = this.$store.state.coords;
+    this.chapters = this.$store.state.chapters;
+  },
+  methods:{
+    goToMainPage(){
+      this.$router.push({name: 'main-page'})
+    },
+    update: function() {
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
-        api.post("/space/addSpaceMarine", this.spaceMarine, {
+        api.post("/space/updateSpaceMarine", this.spaceMarine, {
           headers: {
             "Content-Type": "application/json"
           }
@@ -62,25 +71,15 @@ export default{
     validateCategory(){
       return validateCategory(this.spaceMarine.category);
     },
-    goToMainPage(){
-      this.$router.push({name: 'main-page'})
-    }
-  },
-  mounted() {
-    this.coords = this.$store.state.coords;
-    this.chapters = this.$store.state.chapters;
-    // console.log(this.coords)
-    // console.log(this.$store.state.coords)
-    // this.coords = this.$router.state.coords;
-    // this.chapters = this.$router.state.chapters;
-    // this.coords = localStorage.getItem("coords")
   }
 }
 </script>
 
 <template>
+  <span id="res"></span>
   <form id="spaceMarine">
-    <span>SPACE MARINE:</span>
+    <span>UPDATE SPACE MARINE:</span>
+    <p>ID: {{spaceMarine.id}}</p>
     <div>
       <span>name:</span>
       <input type="text" v-model="spaceMarine.name" @change="validateName"/>
@@ -100,10 +99,6 @@ export default{
       <select v-model="spaceMarine.chapter.id" @change="validateChapter">
         <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
       </select>
-      <!--      <div v-for="chapter in chapters">-->
-      <!--        <input type="radio" v-model="spaceMarine.chapter.id"  v-bind:value="chapter.id" @change="validateChapter"/>-->
-      <!--        <label>name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</label>-->
-      <!--      </div>-->
 
       <span class="error" id="chapter_error"/>
     </div>
@@ -161,7 +156,7 @@ export default{
     </div>
 
     <div>
-      <input class="but"  type="submit" @click.prevent="addSpaceMarine()" value="add"/>
+      <input class="but"  type="submit" @click.prevent="update()" value="save"/>
     </div>
   </form>
   <div>

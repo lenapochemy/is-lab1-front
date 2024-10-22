@@ -8,7 +8,29 @@ const store = new Vuex.Store({
             id: null,
             x: null,
             y: null
-        }
+        },
+        chapter: {
+            id: null,
+            name: null,
+            parentLegion: null
+        },
+        spaceMarine: {
+            name: '',
+            coordinates: {
+                id: '',
+                x: '',
+                y: '',
+            },
+            chapter: {
+                id: '',
+                name: '',
+                parentLegion: ''
+            },
+            health: '',
+            category: '',
+            weaponType: null,
+            meleeWeapon: null
+        },
     },
     mutations: {
         setCoords(state, data){
@@ -17,15 +39,15 @@ const store = new Vuex.Store({
         setChapters(state, data){
             state.chapters = data;
         },
-        setCoordX(state, data){
-            state.coordinate.x = data;
+        setCoord(state, data){
+            state.coordinate = data;
         },
-        setCoordY(state, data){
-            state.coordinate.y = data;
+        setChapter(state, data){
+            state.chapter = data;
         },
-        setCoordId(state, data){
-            state.coordinate.id = data;
-        },
+        setSpaceMarine(state, data){
+            state.spaceMarine = data;
+        }
     }
 })
 

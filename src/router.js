@@ -5,7 +5,8 @@ import AddChapterComponent from "@/components/AddChapterComponent.vue";
 import AddCoordinateComponent from "@/components/AddCoordinateComponent.vue";
 import AddSpaceMarineComponent from "@/components/AddSpaceMarineComponent.vue";
 import UpdateCoordinatesComponent from "@/components/UpdateCoordinatesComponent.vue";
-
+import UpdateChapterComponent from "@/components/UpdateChapterComponent.vue";
+import UpdateSpaceMarineComponent from "@/components/UpdateSpaceMarineComponent.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -42,6 +43,16 @@ const router = createRouter({
             path: '/updateCoordinate',
             name: 'update-coordinate-page',
             component: UpdateCoordinatesComponent
+        },
+        {
+            path: '/updateChapter',
+            name: 'update-chapter-page',
+            component: UpdateChapterComponent
+        },
+        {
+            path: '/updateSpaceMarine',
+            name: 'update-space-marine-page',
+            component: UpdateSpaceMarineComponent
         },
     ]
 })

@@ -14,9 +14,10 @@ export default {
     }
   },
   mounted() {
-    this.coordinate.id = this.$store.state.coordinate.id;
-    this.coordinate.x = this.$store.state.coordinate.x;
-    this.coordinate.y = this.$store.state.coordinate.y;
+    this.coordinate = this.$store.state.coordinate;
+    // this.coordinate.id = this.$store.state.coordinate.id;
+    // this.coordinate.x = this.$store.state.coordinate.x;
+    // this.coordinate.y = this.$store.state.coordinate.y;
   },
   methods: {
     goToMainPage(){
@@ -29,8 +30,6 @@ export default {
       return validateCoordY(this.coordinate.y);
     },
     update(){
-      console.log(this.validateX());
-      console.log(this.validateY());
       if(this.validateX() && this.validateY()){
         console.log("in request");
         api.post("/space/updateCoord", this.coordinate)
@@ -50,7 +49,7 @@ export default {
   <h1>Update Coordinate</h1>
   <b>Id: {{coordinate.id}}</b>
   <form id="coord">
-    <span>COORDINATES:</span>
+<!--    <span>COORDINATES:</span>-->
     <div>
       <span>coordinate X:</span>
       <input type="text" v-model="coordinate.x" @change="validateX"/>
@@ -68,9 +67,7 @@ export default {
     </div>
   </form>
   <div>
-    <form @submit.prevent="goToMainPage">
-      <input class="but" type="submit" value="back to main page">
-    </form>
+    <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
   </div>
 
 

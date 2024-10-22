@@ -4,26 +4,25 @@ import {errorHandler} from "@/js/utils.js";
 import {validateChapterName} from "@/js/validation.js";
 
 export default {
-  name: "AddChapterComponent",
+  name: "UpdateChapterComponent",
   data(){
     return {
       chapter: {
+        id: '',
         name: '',
         parentLegion: null
       }
     }
   },
-  methods: {
-    addChapter: function() {
-      if(this.validateName()) {
-        api.post("/space/newChapter", this.chapter, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+  mounted(){
+    this.chapter = this.$store.state.chapter;
+  },
+  methods:{
+    update(){
+      if(this.validateName()){
+        // console.log("in request");
+        api.post("/space/updateChapter", this.chapter)
             .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
-              // this.getChapters();
               this.$router.push({name: 'main-page'})
             })
             .catch(error => {
@@ -34,15 +33,6 @@ export default {
     validateName(){
       return validateChapterName(this.chapter.name);
     },
-    // validateChapterName(){
-    //   if(this.chapter.name == ""){
-    //     createErrorMessage("Chapter name can't be empty", "chapter_name_error");
-    //     return false;
-    //   } else {
-    //     cleanErrorMessage("chapter_name_error");
-    //     return true;
-    //   }
-    // },
     goToMainPage(){
       this.$router.push({name: 'main-page'})
     }
@@ -53,7 +43,8 @@ export default {
 <template>
   <span id="res"></span>
   <form id="chapter">
-    <span>CHAPTER:</span>
+    <span>UPDATE CHAPTER:</span>
+    <b>ID: {{chapter.id}}</b>
     <div>
       <span>chapter name:</span>
       <input type="text" v-model="chapter.name" @change="validateName"/>
@@ -67,7 +58,7 @@ export default {
     </div>
 
     <div>
-      <input class="but" type="submit" @click.prevent="addChapter()" value="add"/>
+      <input class="but" type="submit" @click.prevent="update" value="update"/>
     </div>
   </form>
 
@@ -76,8 +67,6 @@ export default {
   </div>
 </template>
 
-<style>
-.error {
-  color: red;
-}
+<style scoped>
+
 </style>
