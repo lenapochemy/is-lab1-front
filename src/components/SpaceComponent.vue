@@ -3,7 +3,14 @@
 import {api} from "@/axios.js";
 import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
 import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
-import {validateChapterName, validateFilterType} from "@/js/validation.js";
+import {
+  validateCategory, validateChapter,
+  validateChapterName, validateCoords,
+  validateCoordX,
+  validateCoordY,
+  validateFilterType, validateHealth,
+  validateName, validateNotEmpty, validateNumber
+} from "@/js/validation.js";
 
 export default{
   name: "SpaceComponent",
@@ -30,32 +37,59 @@ export default{
       filterChapterParam: '',
       inChapterFilter: false,
 
+      filterCoordType: '',
+      filterCoordParam: '',
+      inCoordFilter: false,
+
+      filterMarineType: '',
+      filterMarineParam: '',
+      inMarineFilter: false,
     }
   },
   methods: {
     getSpaceMarines: function(param){
+      this.inMarineFilter = false;
       if(param != null){
         this.currentMarineParam = param;
       }
-      api.get("/space/getSpaceMarine/" + this.currentMarineParam + "/" + this.currentMarinePage)
+      api.get("/space/" + this.currentMarineParam + "/" + this.currentMarinePage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
               this.spaceMarines = response.data.content;
               this.totalMarinePages = response.data.totalPages;
+              cleanErrorMessage("filter_marine_error");
             }
           })
           .catch(error => {
             document.getElementById("res").innerHTML = error;
           })
-
+    },
+    filterSpaceMarine(){
+      if(this.validateMarineType() && this.validateMarine()) {
+        this.inMarineFilter = true;
+        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage)
+            .then(response => {
+              if (response.status === 200) {
+                document.getElementById("res").innerHTML = "yes";
+                this.spaceMarines = response.data.content;
+                if (this.spaceMarines.length == 0) {
+                  document.getElementById("filter_marine_error").innerHTML = "No find chapter with this " + this.filterMarineType;
+                }
+                this.totalMarinePages = response.data.totalPages;
+              }
+            })
+            .catch(error => {
+              document.getElementById("res").innerHTML = error;
+            })
+      }
     },
     getChapters: function(param){
       this.inChapterFilter = false;
       if(param != null){
         this.currentChapterParam = param;
       }
-      api.get("/space/getChapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
+      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes chapter";
@@ -70,16 +104,16 @@ export default{
           })
     },
     filterChapter(){
-      console.log(this.filterChapterType);
-      console.log(this.filterChapterParam);
+      // console.log(this.filterChapterType);
+      // console.log(this.filterChapterParam);
       if(this.validateChapter() && this.validateChapterType()) {
         this.inChapterFilter = true;
-        console.log("in request");
-        let url;
+        // console.log("in request");
+        let url = "/space/chapter/"
         if (this.filterChapterType == "name") {
-          url = "/space/getChapterByName/"
+          url += "byName/"
         } else {
-          url = "/space/getChapterByParentLegion/"
+          url += "byParentLegion/"
         }
         api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
             .then(response => {
@@ -102,7 +136,8 @@ export default{
       if(param != null) {
         this.currentCoordParam = param;
       }
-      api.get("/space/getCoord/" + this.currentCoordParam + "/" + this.currentCoordPage)
+      this.inCoordFilter = false;
+      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -110,11 +145,39 @@ export default{
               this.totalCoordPages = response.data.totalPages;
               // localStorage.setItem("coords", this.coords)
               this.$store.commit('setCoords', this.coords);
+              cleanErrorMessage("filter_coord_error");
             }
           })
           .catch(error => {
             document.getElementById("res").innerHTML = error;
           })
+    },
+    filterCoord(){
+      if(this.validateCoordType() && this.validateCoord()) {
+        this.inCoordFilter = true;
+        let url = "/space/coord/"
+        if (this.filterCoordType == "x") {
+          url += "byX/"
+        } else {
+          url += "byY/"
+        }
+        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage)
+            .then(response => {
+              if (response.status === 200) {
+                document.getElementById("res").innerHTML = "yes";
+                this.coords = response.data.content;
+                if (this.coords.length == 0) {
+                  document.getElementById("filter_coord_error").innerHTML = "No find coord with this " + this.filterCoordType;
+                }
+                this.totalCoordPages = response.data.totalPages;
+                // localStorage.setItem("coords", this.coords)
+                // this.$store.commit('setCoords', this.coords);
+              }
+            })
+            .catch(error => {
+              document.getElementById("res").innerHTML = error;
+            })
+      }
     },
     getPrevPageCoordinates(){
       this.currentCoordPage--;
@@ -201,10 +264,42 @@ export default{
     },
     validateChapter(){
       return validateChapterName(this.filterChapterParam);
-
     },
     validateChapterType(){
       return validateFilterType(this.filterChapterType, "chapter");
+    },
+    validateCoordType(){
+      return validateFilterType(this.filterCoordType, "coord");
+    },
+    validateCoord(){
+      if(this.filterCoordType == 'x'){
+        return validateCoordX(this.filterCoordParam);
+      } else {
+        return validateCoordY(this.filterCoordParam);
+      }
+    },
+    validateMarineType(){
+      return validateFilterType(this.filterMarineType, "marine")
+    },
+    validateMarine(){
+      switch (this.filterMarineType){
+        case 'Name':
+          return validateName(this.filterMarineParam);
+        case 'Coord':
+          return validateNumber(this.filterMarineParam, "Coordinates id", "marine");
+        case 'Date':
+          return validateNotEmpty(this.filterMarineParam, "Date", "marine");
+        case 'Chapter':
+          return validateNumber(this.filterMarineParam, "Chapter", "marine");
+        case 'Health':
+          return validateHealth(this.filterMarineParam)
+        case 'Category':
+          return validateCategory(this.filterMarineParam);
+        case 'Weapon':
+          return validateNotEmpty(this.filterMarineParam, "Weapon", "marine");
+        case 'MeleeWeapon':
+          return validateNotEmpty(this.filterMarineParam, "Melee weapon", "marine");
+      }
     }
   },
   mounted() {
@@ -236,7 +331,7 @@ export default{
   <span id="res"></span>
 
 
-  <table border="1" id="coord_table">
+  <table border="1" id="coord_table" v-if="coords.length >0">
     <thead>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('x')" value="X"/></th>
@@ -254,6 +349,23 @@ export default{
     </tr>
     </tbody>
   </table>
+
+  <div>
+    <span>Filter for coords:</span>
+    <form>
+      <select v-model="filterCoordType" @change="validateCoordType">
+        <option value="x">X</option>
+        <option value="y">Y</option>
+      </select>
+      <input type="text" v-model="filterCoordParam" @change="validateCoord"/>
+      <input class="but" type="submit" @click.prevent="filterCoord()" value="filter"/>
+
+      <span class="error" id="filter_coord_error"></span>
+      <span class="error" id="coord_x_error"></span>
+      <span class="error" id="coord_y_error"></span>
+    </form>
+    <input class="but" type="button" v-if="inCoordFilter" @click.prevent="getCoordinates()" value="delete filter"/>
+  </div>
 
   <div>
     <span>Page number {{currentCoordPage+1}}</span>
@@ -296,8 +408,6 @@ export default{
       <span class="error" id="chapter_name_error"></span>
     </form>
     <input class="but" type="button" v-if="inChapterFilter" @click.prevent="getChapters()" value="delete filter"/>
-
-
   </div>
 
   <div>
@@ -339,6 +449,34 @@ export default{
     </tr>
     </tbody>
   </table>
+
+  <div>
+    <span>Filter for space marines:</span>
+    <form>
+      <select v-model="filterMarineType" @change="validateMarineType">
+        <option value="Name">name</option>
+        <option value="Coord">coordinates id</option>
+<!--        <option value="Date">date and time</option>-->
+        <option value="Chapter">chapter id</option>
+        <option value="Health">health</option>
+        <option value="Category">category</option>
+<!--        <option value="WeaponType">weapon type</option>-->
+<!--        <option value="MeleeWeapon">melee weapon</option>-->
+      </select>
+      <input type="text" v-model="filterMarineParam" @change="validateMarine"/>
+      <input class="but" type="submit" @click.prevent="filterSpaceMarine()" value="filter"/>
+
+      <span class="error" id="filter_marine_error"></span>
+      <span class="error" id="marine_error"></span>
+      <span class="error" id="name_error"></span>
+      <span class="error" id="coord_error"></span>
+      <span class="error" id="chapter_error"></span>
+      <span class="error" id="health_error"></span>
+      <span class="error" id="category_error"></span>
+
+    </form>
+    <input class="but" type="button" v-if="inMarineFilter" @click.prevent="getSpaceMarines()" value="delete filter"/>
+  </div>
 
   <div>
     <span>Page number {{currentMarinePage+1}}</span>

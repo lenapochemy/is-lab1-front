@@ -36,6 +36,23 @@ export function validateCoordY(y){
     }
 }
 
+export function validateNumber(y, name, error){
+    if(y == ""){
+        createErrorMessage(name + " can't be empty", error + "_error");
+        return false;
+    } else {
+        // y.replace(",", ".");
+        // let y = this.coordinates.y;
+        if (!(!isNaN(parseFloat(y)) && isFinite(y))) {
+            createErrorMessage(name +" should be a number", error + "_error");
+            return false;
+        } else {
+            cleanErrorMessage(error + "_error");
+            return true;
+        }
+    }
+}
+
 export function validateChapterName(name){
     if(name == ""){
         createErrorMessage("Chapter name can't be empty", "chapter_name_error");
@@ -111,6 +128,17 @@ export function validateFilterType(name, object){
         return false;
     } else {
         cleanErrorMessage("filter_" + object + "_error");
+        return true;
+    }
+}
+
+
+export function validateNotEmpty(name, object, error){
+    if(name == ""){
+        createErrorMessage(object + " can't be empty", "filter_" + error + "_error");
+        return false;
+    } else {
+        cleanErrorMessage("filter_" + error + "_error");
         return true;
     }
 }

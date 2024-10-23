@@ -21,7 +21,7 @@ export default {
     update(){
       if(this.validateName()){
         // console.log("in request");
-        api.post("/space/updateChapter", this.chapter)
+        api.post("/space/chapter/update", this.chapter)
             .then(response => {
               this.$router.push({name: 'main-page'})
             })

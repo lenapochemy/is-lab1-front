@@ -32,7 +32,7 @@ export default {
     update(){
       if(this.validateX() && this.validateY()){
         console.log("in request");
-        api.post("/space/updateCoord", this.coordinate)
+        api.post("/space/coord/update", this.coordinate)
             .then(response => {
               this.$router.push({name: 'main-page'})
             })

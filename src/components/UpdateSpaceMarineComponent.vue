@@ -41,7 +41,7 @@ export default {
     update: function() {
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
-        api.post("/space/updateSpaceMarine", this.spaceMarine, {
+        api.post("/space/update", this.spaceMarine, {
           headers: {
             "Content-Type": "application/json"
           }

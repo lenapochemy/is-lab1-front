@@ -16,7 +16,7 @@ export default {
   methods: {
     addCoordinate: function() {
       if(this.validateX() && this.validateY()) {
-        api.post("/space/newCoord", this.coordinates, {
+        api.post("/space/coord/create", this.coordinates, {
           headers: {
             "Content-Type": "application/json"
           }

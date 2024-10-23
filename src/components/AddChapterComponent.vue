@@ -16,7 +16,7 @@ export default {
   methods: {
     addChapter: function() {
       if(this.validateName()) {
-        api.post("/space/newChapter", this.chapter, {
+        api.post("/space/chapter/create", this.chapter, {
           headers: {
             "Content-Type": "application/json"
           }
