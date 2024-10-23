@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {errorHandler} from "@/js/utils.js";
+import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
 import {validateCategory, validateChapter, validateCoords, validateHealth, validateName} from "@/js/validation.js";
 
 export default{
@@ -35,8 +35,7 @@ export default{
         api.post("/space/create", this.spaceMarine, {
           headers: {
             "Content-Type": "application/json"
-          }
-        })
+          }})
             .then(response => {
               // document.getElementById("res").innerHTML = "ura add";
               // this.getSpaceMarines();
@@ -46,6 +45,29 @@ export default{
               errorHandler(error.response.status, "res");
             })
       }
+    },
+    getAllChapters(){
+      api.get("/space/chapter")
+          .then(response => {
+            if(response.status === 200){
+              // document.getElementById("res").innerHTML = "yes chapter";
+              this.chapters = response.data;
+            }
+          })
+          .catch(error => {
+            document.getElementById("res").innerHTML = error;
+          })
+    },
+    getAllCoordinates(){
+      api.get("/space/coord")
+          .then(response => {
+            if(response.status === 200){
+              this.coords = response.data;
+            }
+          })
+          .catch(error => {
+            document.getElementById("res").innerHTML = error;
+          })
     },
     validateName(){
       return validateName(this.spaceMarine.name);
@@ -67,9 +89,11 @@ export default{
     }
   },
   mounted() {
-    this.coords = this.$store.state.coords;
-    this.chapters = this.$store.state.chapters;
-    // console.log(this.coords)
+    this.getAllCoordinates();
+    this.getAllChapters();
+    // this.coords = this.$store.state.coords;
+    // this.chapters = this.$store.state.chapters;
+    // console.log(this.chapters)
     // console.log(this.$store.state.coords)
     // this.coords = this.$router.state.coords;
     // this.chapters = this.$router.state.chapters;

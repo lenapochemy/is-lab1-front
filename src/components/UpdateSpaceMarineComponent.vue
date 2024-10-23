@@ -31,8 +31,10 @@ export default {
   },
   mounted() {
     this.spaceMarine = this.$store.state.spaceMarine;
-    this.coords = this.$store.state.coords;
-    this.chapters = this.$store.state.chapters;
+    this.getAllChapters();
+    this.getAllCoordinates();
+    // this.coords = this.$store.state.coords;
+    // this.chapters = this.$store.state.chapters;
   },
   methods:{
     goToMainPage(){
@@ -55,6 +57,29 @@ export default {
               errorHandler(error.response.status, "res");
             })
       }
+    },
+    getAllChapters(){
+      api.get("/space/chapter")
+          .then(response => {
+            if(response.status === 200){
+              // document.getElementById("res").innerHTML = "yes chapter";
+              this.chapters = response.data;
+            }
+          })
+          .catch(error => {
+            document.getElementById("res").innerHTML = error;
+          })
+    },
+    getAllCoordinates(){
+      api.get("/space/coord")
+          .then(response => {
+            if(response.status === 200){
+              this.coords = response.data;
+            }
+          })
+          .catch(error => {
+            document.getElementById("res").innerHTML = error;
+          })
     },
     validateName(){
       return validateName(this.spaceMarine.name);

@@ -2,8 +2,8 @@ import Vuex from 'vuex';
 
 const store = new Vuex.Store({
     state: {
-        coords: null,
-        chapters: null,
+        // coords: null,
+        // chapters: null,
         coordinate: {
             id: null,
             x: null,
@@ -33,12 +33,12 @@ const store = new Vuex.Store({
         },
     },
     mutations: {
-        setCoords(state, data){
-            state.coords = data;
-        },
-        setChapters(state, data){
-            state.chapters = data;
-        },
+        // setCoords(state, data){
+        //     state.coords = data;
+        // },
+        // setChapters(state, data){
+        //     state.chapters = data;
+        // },
         setCoord(state, data){
             state.coordinate = data;
         },

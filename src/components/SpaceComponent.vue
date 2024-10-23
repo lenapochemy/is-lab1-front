@@ -95,7 +95,7 @@ export default{
               document.getElementById("res").innerHTML = "yes chapter";
               this.chapters = response.data.content;
               this.totalChapterPages = response.data.totalPages;
-              this.$store.commit('setChapters', this.chapters);
+              // this.$store.commit('setChapters', this.chapters);
               cleanErrorMessage("filter_chapter_error");
             }
           })
@@ -144,7 +144,7 @@ export default{
               this.coords = response.data.content;
               this.totalCoordPages = response.data.totalPages;
               // localStorage.setItem("coords", this.coords)
-              this.$store.commit('setCoords', this.coords);
+              // this.$store.commit('setCoords', this.coords);
               cleanErrorMessage("filter_coord_error");
             }
           })
@@ -204,8 +204,8 @@ export default{
       this.getSpaceMarines();
     },
     addSpaceMarine: function() {
-      this.$store.commit('setChapters', this.chapters);
-      this.$store.commit('setCoords', this.coords);
+      // this.$store.commit('setChapters', this.chapters);
+      // this.$store.commit('setCoords', this.coords);
       this.$router.push({name: 'add-space-marine-page'})
     },
     addChapter: function() {
@@ -257,8 +257,8 @@ export default{
       this.$router.push({name: 'update-chapter-page'})
     },
     updateSpaceMarine(spaceMarine){
-      this.$store.commit('setChapters', this.chapters);
-      this.$store.commit('setCoords', this.coords);
+      // this.$store.commit('setChapters', this.chapters);
+      // this.$store.commit('setCoords', this.coords);
       this.$store.commit('setSpaceMarine', spaceMarine);
       this.$router.push({name: 'update-space-marine-page'})
     },
