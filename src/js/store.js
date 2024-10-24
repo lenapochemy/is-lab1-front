@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 
 const store = new Vuex.Store({
     state: {
+        token: '',
         // coords: null,
         // chapters: null,
         coordinate: {
@@ -47,6 +48,9 @@ const store = new Vuex.Store({
         },
         setSpaceMarine(state, data){
             state.spaceMarine = data;
+        },
+        setToken(state, data){
+            state.token = data;
         }
     }
 })

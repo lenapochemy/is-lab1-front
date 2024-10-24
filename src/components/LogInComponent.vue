@@ -91,15 +91,13 @@ export default {
     logIn: function (){
       // this.v$.$validate()
       if(this.validateLogin() && this.validatePassword()) {
-        api.post("/user/logIn", this.logData, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+        api.post("/user/logIn", this.logData)
             .then(response => {
               if (response.status === 200) {
-                // localStorage.setItem("userToken", response.data.token);
-
+                console.log(response.data);
+                localStorage.setItem("userToken", response.data);
+                // this.$store.commit('setToken', response.data);
+                localStorage.setItem("userLogin", this.logData.login);
                 this.$router.push({name: 'main-page'})
                 // document.getElementById("res").innerHTML = "vse good";
               }

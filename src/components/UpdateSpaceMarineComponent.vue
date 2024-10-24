@@ -43,11 +43,7 @@ export default {
     update: function() {
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
-        api.post("/space/update", this.spaceMarine, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+        api.post("/space/update", this.spaceMarine)
             .then(response => {
               // document.getElementById("res").innerHTML = "ura add";
               // this.getSpaceMarines();

@@ -44,6 +44,9 @@ export default{
       filterMarineType: '',
       filterMarineParam: '',
       inMarineFilter: false,
+
+      // token: '',
+      userLogin: ''
     }
   },
   methods: {
@@ -52,7 +55,9 @@ export default{
       if(param != null){
         this.currentMarineParam = param;
       }
-      api.get("/space/" + this.currentMarineParam + "/" + this.currentMarinePage)
+      let url = "/space/" + this.currentMarineParam + "/" + this.currentMarinePage;
+      // const headers = {"Content-":Type "application/json", "Authorization": this.token};
+      api.get(url)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -303,6 +308,8 @@ export default{
     }
   },
   mounted() {
+    this.token = localStorage.getItem("userToken");
+    this.userLogin = localStorage.getItem("userLogin")
     this.currentCoordPage = 0;
     this.currentCoordParam = 'id';
     this.currentChapterParam = 'id';
@@ -336,13 +343,16 @@ export default{
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('x')" value="X"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('y')" value="Y"/></th>
+    <th>Owner</th>
     </thead>
     <tbody>
     <tr v-for="coord in coords">
       <td>{{coord.id}}</td>
       <td>{{coord.x}}</td>
       <td>{{coord.y}}</td>
-      <td>
+      <td>{{coord.user.login}}</td>
+      <td v-if="coord.user.login === this.userLogin">
+<!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteCoord(coord.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateCoord(coord)" value="update"/>
       </td>
@@ -380,13 +390,15 @@ export default{
     <th> <input class="but"  type="submit" @click.prevent="getChapters('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('name')" value="name"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('parentLegion')" value="parent legion"/></th>
+    <th>owner</th>
     </thead>
     <tbody>
     <tr v-for="chapter in chapters">
       <td>{{chapter.id}}</td>
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
-      <td>
+      <td>{{chapter.user.login}}</td>
+      <td v-if="chapter.user.login === this.userLogin">
           <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
           <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
       </td>
@@ -428,6 +440,7 @@ export default{
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('category')" value="category"/></th>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('weaponType')" value="weapon type"/></th>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('meleeWeapon')" value="melee weapon"/></th>
+    <th>owner</th>
     </thead>
     <tbody>
     <tr v-for="marine in spaceMarines">
@@ -442,7 +455,8 @@ export default{
       <td>{{marine.category}}</td>
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
-      <td>
+      <td>{{marine.user.login}}</td>
+      <td v-if="marine.user.login === this.userLogin">
         <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
       </td>
@@ -493,5 +507,11 @@ export default{
 }
 .error {
   color: red;
+}
+.my {
+  color: cornflowerblue;
+}
+.notMy {
+  color: lightyellow;
 }
 </style>

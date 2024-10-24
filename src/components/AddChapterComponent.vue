@@ -16,11 +16,7 @@ export default {
   methods: {
     addChapter: function() {
       if(this.validateName()) {
-        api.post("/space/chapter/create", this.chapter, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+        api.post("/space/chapter/create", this.chapter)
             .then(response => {
               document.getElementById("res").innerHTML = "ura add";
               // this.getChapters();

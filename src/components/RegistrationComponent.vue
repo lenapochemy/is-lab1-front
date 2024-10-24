@@ -59,11 +59,7 @@ export default {
     },
     registration: function (){
       if(this.validateLogin() && this.validatePassword()) {
-        api.post("/user/reg", this.regData, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+        api.post("/user/reg", this.regData)
             .then(response => {
               if (response.status === 200) {
                 document.getElementById("res").innerHTML = "Вы зарегистрированы, теперь можете входить";

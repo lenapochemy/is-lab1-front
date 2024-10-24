@@ -8,8 +8,8 @@ export default {
   },
   methods: {
     logout: function (){
-
-      // localStorage.removeItem("userToken");
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("userLogin");
       this.$router.push({name: 'start-page'});
 
     }

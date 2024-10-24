@@ -32,10 +32,7 @@ export default{
     addSpaceMarine: function() {
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
-        api.post("/space/create", this.spaceMarine, {
-          headers: {
-            "Content-Type": "application/json"
-          }})
+        api.post("/space/create", this.spaceMarine)
             .then(response => {
               // document.getElementById("res").innerHTML = "ura add";
               // this.getSpaceMarines();
