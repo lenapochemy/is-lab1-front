@@ -134,7 +134,7 @@ export function validateFilterType(name, object){
 
 
 export function validateNotEmpty(name, object, error){
-    if(name == ""){
+    if(name == null || name == ""){
         createErrorMessage(object + " can't be empty", "filter_" + error + "_error");
         return false;
     } else {

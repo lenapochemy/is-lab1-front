@@ -6,6 +6,7 @@ const store = new Vuex.Store({
         admin: false,
         // coords: null,
         // chapters: null,
+        spaceMarines: null,
         coordinate: {
             id: null,
             x: null,

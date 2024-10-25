@@ -312,10 +312,10 @@ export default{
     getRole(){
       this.admin = this.$store.state.admin;
       console.log(this.admin);
+    },
+    toSpecialPage(){
+      this.$router.push({name: 'special-page'})
     }
-    // admin(){
-    //   this.$router.push({name: 'admin-page'})
-    // }
   },
   mounted() {
     this.admin = this.$store.state.admin;
@@ -338,7 +338,7 @@ export default{
 
 <template>
 <!--  <span id="admin"></span>-->
-<!--  <input class="but" type="button" @click.prevent="admin()" value="admin page"/>-->
+  <input class="but" type="button" @click.prevent="toSpecialPage()" value="special page"/>
 <!--  <AdminComponent/>-->
   <span id="res"></span>
 

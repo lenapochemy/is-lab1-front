@@ -8,6 +8,7 @@ import UpdateCoordinatesComponent from "@/components/UpdateCoordinatesComponent.
 import UpdateChapterComponent from "@/components/UpdateChapterComponent.vue";
 import UpdateSpaceMarineComponent from "@/components/UpdateSpaceMarineComponent.vue";
 import AdminComponent from "@/components/AdminComponent.vue";
+import SpecialView from "@/views/SpecialView.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -59,6 +60,11 @@ const router = createRouter({
             path: '/admin',
             name: 'admin-page',
             component: AdminComponent
+        },
+        {
+            path: '/special',
+            name: 'special-page',
+            component: SpecialView
         },
     ]
 })
