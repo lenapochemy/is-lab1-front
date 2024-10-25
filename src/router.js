@@ -7,6 +7,7 @@ import AddSpaceMarineComponent from "@/components/AddSpaceMarineComponent.vue";
 import UpdateCoordinatesComponent from "@/components/UpdateCoordinatesComponent.vue";
 import UpdateChapterComponent from "@/components/UpdateChapterComponent.vue";
 import UpdateSpaceMarineComponent from "@/components/UpdateSpaceMarineComponent.vue";
+import AdminComponent from "@/components/AdminComponent.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -53,6 +54,11 @@ const router = createRouter({
             path: '/updateSpaceMarine',
             name: 'update-space-marine-page',
             component: UpdateSpaceMarineComponent
+        },
+        {
+            path: '/admin',
+            name: 'admin-page',
+            component: AdminComponent
         },
     ]
 })

@@ -11,10 +11,11 @@ import {
   validateFilterType, validateHealth,
   validateName, validateNotEmpty, validateNumber
 } from "@/js/validation.js";
+import AdminComponent from "@/components/AdminComponent.vue";
 
 export default{
   name: "SpaceComponent",
-  components: {UpdateComponent},
+  components: {AdminComponent, UpdateComponent},
   data(){
     return {
       spaceMarines: [],
@@ -57,7 +58,9 @@ export default{
       }
       let url = "/space/" + this.currentMarineParam + "/" + this.currentMarinePage;
       // const headers = {"Content-":Type "application/json", "Authorization": this.token};
-      api.get(url)
+      api.get(url, {headers: {
+          "Authorization" : this.$store.state.token
+        }})
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -73,7 +76,9 @@ export default{
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
         this.inMarineFilter = true;
-        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage)
+        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage, {headers: {
+            "Authorization" : this.$store.state.token
+          }})
             .then(response => {
               if (response.status === 200) {
                 document.getElementById("res").innerHTML = "yes";
@@ -94,7 +99,9 @@ export default{
       if(param != null){
         this.currentChapterParam = param;
       }
-      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
+      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage, {headers: {
+          "Authorization" : this.$store.state.token
+        }})
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes chapter";
@@ -120,7 +127,9 @@ export default{
         } else {
           url += "byParentLegion/"
         }
-        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
+        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage, {headers: {
+            "Authorization" : this.$store.state.token
+          }})
             .then(response => {
               if (response.status === 200) {
                 // document.getElementById("res").innerHTML = "yes chapter";
@@ -142,7 +151,9 @@ export default{
         this.currentCoordParam = param;
       }
       this.inCoordFilter = false;
-      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage)
+      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage, {headers: {
+          "Authorization" : this.$store.state.token
+        }})
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -166,7 +177,9 @@ export default{
         } else {
           url += "byY/"
         }
-        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage)
+        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage, {headers: {
+            "Authorization" : this.$store.state.token
+          }})
             .then(response => {
               if (response.status === 200) {
                 document.getElementById("res").innerHTML = "yes";
@@ -305,7 +318,10 @@ export default{
         case 'MeleeWeapon':
           return validateNotEmpty(this.filterMarineParam, "Melee weapon", "marine");
       }
-    }
+    },
+    // admin(){
+    //   this.$router.push({name: 'admin-page'})
+    // }
   },
   mounted() {
     this.token = localStorage.getItem("userToken");
@@ -324,18 +340,21 @@ export default{
 </script>
 
 <template>
+<!--  <span id="admin"></span>-->
+<!--  <input class="but" type="button" @click.prevent="admin()" value="admin page"/>-->
+<!--  <AdminComponent/>-->
   <span id="res"></span>
 
-  <form @submit.prevent="getSpaceMarines">
-    <input class="but" type="submit" value="get marines">
-  </form>
-  <form @submit.prevent="getChapters">
-    <input class="but" type="submit" value="get chapters">
-  </form>
-  <form @submit.prevent="getCoordinates">
-    <input class="but" type="submit" value="get coords">
-  </form>
-  <span id="res"></span>
+<!--  <form @submit.prevent="getSpaceMarines">-->
+<!--    <input class="but" type="submit" value="get marines">-->
+<!--  </form>-->
+<!--  <form @submit.prevent="getChapters">-->
+<!--    <input class="but" type="submit" value="get chapters">-->
+<!--  </form>-->
+<!--  <form @submit.prevent="getCoordinates">-->
+<!--    <input class="but" type="submit" value="get coords">-->
+<!--  </form>-->
+<!--  <span id="res"></span>-->
 
 
   <table border="1" id="coord_table" v-if="coords.length >0">
@@ -399,6 +418,7 @@ export default{
       <td>{{chapter.parentLegion}}</td>
       <td>{{chapter.user.login}}</td>
       <td v-if="chapter.user.login === this.userLogin">
+<!--      <td>-->
           <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
           <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
       </td>
@@ -457,6 +477,7 @@ export default{
       <td>{{marine.meleeWeapon}}</td>
       <td>{{marine.user.login}}</td>
       <td v-if="marine.user.login === this.userLogin">
+<!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
       </td>

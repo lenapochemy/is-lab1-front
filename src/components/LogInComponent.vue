@@ -96,7 +96,7 @@ export default {
               if (response.status === 200) {
                 console.log(response.data);
                 localStorage.setItem("userToken", response.data);
-                // this.$store.commit('setToken', response.data);
+                this.$store.commit('setToken', response.data);
                 localStorage.setItem("userLogin", this.logData.login);
                 this.$router.push({name: 'main-page'})
                 // document.getElementById("res").innerHTML = "vse good";
