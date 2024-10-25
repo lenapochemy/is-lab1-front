@@ -58,9 +58,7 @@ export default{
       }
       let url = "/space/" + this.currentMarineParam + "/" + this.currentMarinePage;
       // const headers = {"Content-":Type "application/json", "Authorization": this.token};
-      api.get(url, {headers: {
-          "Authorization" : this.$store.state.token
-        }})
+      api.get(url)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -76,9 +74,7 @@ export default{
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
         this.inMarineFilter = true;
-        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage, {headers: {
-            "Authorization" : this.$store.state.token
-          }})
+        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage)
             .then(response => {
               if (response.status === 200) {
                 document.getElementById("res").innerHTML = "yes";
@@ -99,9 +95,7 @@ export default{
       if(param != null){
         this.currentChapterParam = param;
       }
-      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage, {headers: {
-          "Authorization" : this.$store.state.token
-        }})
+      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes chapter";
@@ -127,9 +121,7 @@ export default{
         } else {
           url += "byParentLegion/"
         }
-        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage, {headers: {
-            "Authorization" : this.$store.state.token
-          }})
+        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
             .then(response => {
               if (response.status === 200) {
                 // document.getElementById("res").innerHTML = "yes chapter";
@@ -151,9 +143,7 @@ export default{
         this.currentCoordParam = param;
       }
       this.inCoordFilter = false;
-      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage, {headers: {
-          "Authorization" : this.$store.state.token
-        }})
+      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage)
           .then(response => {
             if(response.status === 200){
               document.getElementById("res").innerHTML = "yes";
@@ -177,9 +167,7 @@ export default{
         } else {
           url += "byY/"
         }
-        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage, {headers: {
-            "Authorization" : this.$store.state.token
-          }})
+        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage)
             .then(response => {
               if (response.status === 200) {
                 document.getElementById("res").innerHTML = "yes";

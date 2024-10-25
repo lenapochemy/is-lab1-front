@@ -14,9 +14,7 @@ export default {
   },
   methods: {
     getRole(){
-      api.get("/user/admin/role", {headers: {
-        "Authorization" : this.$store.state.token
-        }})
+      api.get("/user/admin/role")
           .then(response => {
             // document.getElementById("admin").i
             // nnerHTML = response.data;
