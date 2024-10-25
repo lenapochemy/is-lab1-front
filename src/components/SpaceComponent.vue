@@ -47,7 +47,9 @@ export default{
       inMarineFilter: false,
 
       // token: '',
-      userLogin: ''
+      userLogin: '',
+      admin: false,
+
     }
   },
   methods: {
@@ -307,11 +309,17 @@ export default{
           return validateNotEmpty(this.filterMarineParam, "Melee weapon", "marine");
       }
     },
+    getRole(){
+      this.admin = this.$store.state.admin;
+      console.log(this.admin);
+    }
     // admin(){
     //   this.$router.push({name: 'admin-page'})
     // }
   },
   mounted() {
+    this.admin = this.$store.state.admin;
+    console.log(this.admin);
     this.token = localStorage.getItem("userToken");
     this.userLogin = localStorage.getItem("userLogin")
     this.currentCoordPage = 0;
@@ -323,6 +331,7 @@ export default{
     this.getCoordinates();
     this.getChapters();
     this.getSpaceMarines();
+    this.getRole();
   }
 }
 </script>
@@ -358,7 +367,7 @@ export default{
       <td>{{coord.x}}</td>
       <td>{{coord.y}}</td>
       <td>{{coord.user.login}}</td>
-      <td v-if="coord.user.login === this.userLogin">
+      <td v-if="admin || coord.user.login === this.userLogin">
 <!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteCoord(coord.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateCoord(coord)" value="update"/>
@@ -405,7 +414,7 @@ export default{
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
       <td>{{chapter.user.login}}</td>
-      <td v-if="chapter.user.login === this.userLogin">
+      <td v-if="admin || chapter.user.login === this.userLogin">
 <!--      <td>-->
           <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
           <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
@@ -464,7 +473,7 @@ export default{
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
       <td>{{marine.user.login}}</td>
-      <td v-if="marine.user.login === this.userLogin">
+      <td v-if="admin || marine.user.login === this.userLogin">
 <!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>

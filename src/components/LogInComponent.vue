@@ -94,10 +94,16 @@ export default {
         api.post("/user/logIn", this.logData)
             .then(response => {
               if (response.status === 200) {
-                console.log(response.data);
-                localStorage.setItem("userToken", response.data);
-                this.$store.commit('setToken', response.data);
+                // console.log(response.data);
+                let token = response.data;
+                console.log(token);
+
+                localStorage.setItem("aaaa", "aaaa");
+                console.log(localStorage.getItem("userToken"));
+                // this.$store.commit('setToken', response.data);
                 localStorage.setItem("userLogin", this.logData.login);
+                localStorage.setItem("userToken", token);
+
                 this.$router.push({name: 'main-page'})
                 // document.getElementById("res").innerHTML = "vse good";
               }

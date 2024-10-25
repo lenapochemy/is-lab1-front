@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 const store = new Vuex.Store({
     state: {
         token: '',
+        admin: false,
         // coords: null,
         // chapters: null,
         coordinate: {
@@ -51,7 +52,10 @@ const store = new Vuex.Store({
         },
         setToken(state, data){
             state.token = data;
-        }
+        },
+        setAdmin(state, data){
+            state.admin = data;
+        },
     }
 })
 

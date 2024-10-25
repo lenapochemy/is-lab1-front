@@ -21,9 +21,9 @@ const router = createRouter({
             path: '/main',
             name: 'main-page',
             component: MainView,
-            // beforeEnter: (to, from, next) => {
-            //     (localStorage.getItem("userToken") !== null) ? next() : next({name: 'start-page'})
-            // }
+            beforeEnter: (to, from, next) => {
+                (localStorage.getItem("userToken") !== null) ? next() : next({name: 'start-page'})
+            }
         },
         {
             path: '/addChapter',

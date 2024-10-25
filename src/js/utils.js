@@ -12,8 +12,8 @@ export function errorHandler(status, mess, mode){
             break;
         case 403:
             document.getElementById(mess).innerHTML = "Вы не авторизованы";
-            localStorage.removeItem("userToken");
-            this.$router.push({name: 'start-page'});
+            // localStorage.removeItem("userToken");
+            // this.$router.push({name: 'start-page'});
             break;
         default:
             document.getElementById(mess).innerHTML = "Проблемы с сервером :(";
