@@ -50,7 +50,7 @@ export default {
       switch (role){
         case "APPROVED_ADMIN":
           this.$store.commit('setAdmin', true);
-          return "admin, you can delete and update all objects. Also you can approve new admin:";
+          return "admin, you can delete and update all objects. Also you can approve new admin.";
         case "WAITING_ADMIN":
           return "just user, you can delete and update just your objects.\nYour request for becoming admin on considerate," +
               " please wait for approve from another admin "
@@ -80,7 +80,7 @@ export default {
 
   <input class="but" type="submit" v-if="role == 'USER'" @click.prevent="becomeAdmin" value="become admin"/>
 
-  <div v-if="role == 'APPROVED_ADMIN'">
+  <div v-if="role === 'APPROVED_ADMIN' && waitingAdmins.length > 0">
     <p class="label">Users, who want to be admin:</p>
   <table>
 <!--    <tr>-->

@@ -2,7 +2,7 @@
 
 import {api} from "@/axios.js";
 import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
-import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
+import UpdateComponent from "@/components/update/UpdateCoordinatesComponent.vue";
 import {
   validateCategory,
   validateChapterName,
@@ -59,9 +59,9 @@ export default{
     this.getChapters();
     this.getSpaceMarines();
     this.getRole();
-    setInterval(this.getCoordinates, 5000);
-    setInterval(this.getChapters, 5000);
-    setInterval(this.getSpaceMarines, 5000);
+    // setInterval(this.getCoordinates, 5000);
+    // setInterval(this.getChapters, 5000);
+    // setInterval(this.getSpaceMarines, 5000);
   },
   methods: {
     getSpaceMarines: function(param){
@@ -88,7 +88,7 @@ export default{
               if (response.status === 200) {
                 this.spaceMarines = response.data.content;
                 if (this.spaceMarines.length == 0) {
-                  document.getElementById("filter_marine_error").innerHTML = "No find chapter with this " + this.filterMarineType;
+                  document.getElementById("filter_marine_error").innerHTML = "No find space marines with this " + this.filterMarineType;
                 }
                 this.totalMarinePages = response.data.totalPages;
               }

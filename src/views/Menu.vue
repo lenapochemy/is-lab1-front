@@ -3,11 +3,13 @@
 import SpaceComponent from "@/components/SpaceComponent.vue";
 import LogOutComponent from "@/components/LogOutComponent.vue";
 import SpecialComponent from "@/views/SpecialComponent.vue";
-import AddChapterComponent from "@/components/AddChapterComponent.vue";
-import AddCoordinateComponent from "@/components/AddCoordinateComponent.vue";
-import AddSpaceMarineComponent from "@/components/AddSpaceMarineComponent.vue";
+import AddChapterComponent from "@/components/add/AddChapterComponent.vue";
+import AddCoordinateComponent from "@/components/add/AddCoordinateComponent.vue";
+import AddSpaceMarineComponent from "@/components/add/AddSpaceMarineComponent.vue";
 import AdminComponent from "@/components/AdminComponent.vue";
-
+import EditChapterComponent from "@/components/edit/EditChapterComponent.vue";
+import EditCoordComponent from "@/components/edit/EditCoordComponent.vue";
+import EditSpaceMarineComponent from "@/components/edit/EditSpaceMarineComponent.vue";
 export default {
   components:{
     AdminComponent,
@@ -16,7 +18,10 @@ export default {
     SpecialComponent,
     AddChapterComponent,
     AddCoordinateComponent,
-    AddSpaceMarineComponent
+    AddSpaceMarineComponent,
+    EditChapterComponent,
+    EditCoordComponent,
+    EditSpaceMarineComponent
   },
   data(){
     return {
@@ -26,6 +31,9 @@ export default {
         {"value": "AddCoordinate", "name": "Add coordinates"},
         {"value": "AddChapter", "name": "Add chapter"},
         {"value": "AddSpaceMarine", "name": "Add space marine"},
+        {"value": "EditChapter", "name": "Chapter editing info"},
+        {"value": "EditCoord", "name": "Coordinates editing info"},
+        {"value": "EditSpaceMarine", "name": "Space marine editing info"}
       ],
       currentButton: "Admin",
     }
