@@ -1,6 +1,7 @@
 <script >
 import {api} from "@/axios.js";
 import {validateNotEmpty} from "@/js/validation.js";
+import {errorHandler} from "@/js/utils.js";
 
 export default {
   name: "NameStartComponent",
@@ -22,6 +23,7 @@ export default {
                   document.getElementById("res_name").innerHTML = "No this space marines";
                   this.callNameStart = false;
                 } else {
+                  document.getElementById("res_name").innerHTML = "Find space marines was successful!";
                   this.callNameStart = true;
                 }
                 //
@@ -29,12 +31,13 @@ export default {
               }
             })
             .catch(error => {
-              document.getElementById("res_name").innerHTML = error;
+              // document.getElementById("res_name").innerHTML = error;
+              errorHandler(error.response.status, "res_name")
             })
       }
     },
     validateName(){
-      return validateNotEmpty(this.name, "Melee weapon", "name");
+      return validateNotEmpty(this.name, "Name start string", "name");
     }
   }
 
@@ -42,13 +45,15 @@ export default {
 </script>
 
 <template>
+  <p class="label">Find all space marines, that name start on this string:</p>
   <div>
-    <input type="text" @click.prevent="getWithNameStarts" v-model="name"/>
+    <label for="name_str">Write name start:</label>
+    <input id="name_str" type="text" @click.prevent="getWithNameStarts" v-model="name"/>
     <input class="but"  type="button" @click.prevent="getWithNameStarts" value="get space marine with this name start"/>
     <span class="error" id="filter_name_error"/>
   </div>
 
-  <span id="res_name"></span>
+  <p id="res_name"></p>
 
   <table border="1" id="space_marine_table" v-if="callNameStart">
     <thead>

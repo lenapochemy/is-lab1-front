@@ -15,13 +15,10 @@ export default {
   },
   mounted() {
     this.coordinate = this.$store.state.coordinate;
-    // this.coordinate.id = this.$store.state.coordinate.id;
-    // this.coordinate.x = this.$store.state.coordinate.x;
-    // this.coordinate.y = this.$store.state.coordinate.y;
   },
   methods: {
     goToMainPage(){
-      this.$router.push({name: 'main-page'})
+      this.$router.push({name: 'menu-page'})
     },
     validateX(){
       return validateCoordX(this.coordinate.x);
@@ -34,10 +31,10 @@ export default {
         console.log("in request");
         api.post("/space/coord/update", this.coordinate)
             .then(response => {
-              this.$router.push({name: 'main-page'})
+              document.getElementById("res_update_coord").innerHTML = "Update coordinate was successful!"
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_update_coord");
             })
       }
     }
@@ -46,10 +43,9 @@ export default {
 </script>
 
 <template>
-  <h1>Update Coordinate</h1>
-  <b>Id: {{coordinate.id}}</b>
+  <p class="label">Update coordinate:</p>
+  <p>Id: {{coordinate.id}}</p>
   <form id="coord">
-<!--    <span>COORDINATES:</span>-->
     <div>
       <span>coordinate X:</span>
       <input type="text" v-model="coordinate.x" @change="validateX"/>
@@ -66,6 +62,8 @@ export default {
       <input class="but"  type="submit" @click.prevent="update" value="save"/>
     </div>
   </form>
+
+  <p id="res_update_coord"></p>
   <div>
     <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
   </div>

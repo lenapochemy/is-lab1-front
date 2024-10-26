@@ -18,7 +18,8 @@ export default {
       if(this.validateX() && this.validateY()) {
         api.post("/space/coord/create", this.coordinates)
             .then(response => {
-              this.$router.push({name: 'main-page'})
+              // this.$router.push({name: 'main-page'})
+              document.getElementById("res_add_coord").innerHTML = "Adding coordinates was successful!"
             })
             .catch(error => {
               errorHandler(error.response.status, "res");
@@ -31,16 +32,13 @@ export default {
     validateY(){
       return validateCoordY(this.coordinates.y);
     },
-    goToMainPage(){
-      this.$router.push({name: 'main-page'})
-    }
   }
 }
 </script>
 
 <template>
   <form id="coord">
-    <span>COORDINATES:</span>
+    <span>ADD COORDINATES:</span>
     <div>
       <span>coordinate X:</span>
       <input type="text" v-model="coordinates.x" @change="validateX"/>
@@ -58,9 +56,7 @@ export default {
       <input class="but"  type="submit" @click.prevent="addCoordinate" value="add"/>
     </div>
   </form>
-  <div>
-    <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
-  </div>
+  <p id="res_add_coord"></p>
 </template>
 
 <style scoped>

@@ -20,13 +20,11 @@ export default {
     getRole(){
       api.get("/user/admin/role")
           .then(response => {
-            // document.getElementById("admin").i
-            // nnerHTML = response.data;
             this.role = response.data;
             this.roleText = this.getRoleText(response.data)
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "admin");
           })
     },
     getWaitingAdmins(){
@@ -35,7 +33,7 @@ export default {
             this.waitingAdmins = response.data;
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "admin");
           })
     },
     becomeAdmin(){
@@ -45,17 +43,16 @@ export default {
             this.getRole();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "admin");
           })
     },
     getRoleText(role){
       switch (role){
         case "APPROVED_ADMIN":
           this.$store.commit('setAdmin', true);
-          console.log(this.$store.state.admin);
-          return "admin, you can delete and delete all objects.";
+          return "admin, you can delete and update all objects. Also you can approve new admin:";
         case "WAITING_ADMIN":
-          return "just user, you can delete and update just your objects. Your request for becoming admin on considerate," +
+          return "just user, you can delete and update just your objects.\nYour request for becoming admin on considerate," +
               " please wait for approve from another admin "
         default:
           this.$store.commit('setAdmin', false);
@@ -65,10 +62,11 @@ export default {
     approveAdmin(id){
       api.post("/user/admin/approve/" + id)
           .then(response => {
+            document.getElementById("admin").innerHTML = "Admin approving was successful!"
             this.getWaitingAdmins();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "admin");
           })
     }
   }
@@ -76,21 +74,28 @@ export default {
 </script>
 
 <template>
-  <span id="admin"></span>
-  <span>You are {{roleText}}</span>
+
+  <br>
+  <p>You are {{roleText}}</p>
 
   <input class="but" type="submit" v-if="role == 'USER'" @click.prevent="becomeAdmin" value="become admin"/>
 
-  <table v-if="role == 'APPROVED_ADMIN'">
+  <div v-if="role == 'APPROVED_ADMIN'">
+    <p class="label">Users, who want to be admin:</p>
+  <table>
+<!--    <tr>-->
+<!--      <td>login</td>-->
+<!--    </tr>-->
     <tr v-for="admin in waitingAdmins">
       <td>{{admin.login}}</td>
       <td>
         <input class="but"  type="submit" @click.prevent="approveAdmin(admin.id)" value="approve"/>
       </td>
     </tr>
-
   </table>
+  </div>
 
+  <p id="admin"></p>
 </template>
 
 <style scoped>

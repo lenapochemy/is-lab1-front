@@ -33,24 +33,20 @@ export default {
     this.spaceMarine = this.$store.state.spaceMarine;
     this.getAllChapters();
     this.getAllCoordinates();
-    // this.coords = this.$store.state.coords;
-    // this.chapters = this.$store.state.chapters;
   },
   methods:{
     goToMainPage(){
-      this.$router.push({name: 'main-page'})
+      this.$router.push({name: 'menu-page'})
     },
     update: function() {
       if(this.validateName() && this.validateCoords() && this.validateChapter() &&
           this.validateHealth() && this.validateCategory()) {
         api.post("/space/update", this.spaceMarine)
             .then(response => {
-              // document.getElementById("res").innerHTML = "ura add";
-              // this.getSpaceMarines();
-              this.$router.push({name: 'main-page'})
+              document.getElementById("res_update_marine").innerHTML = "Update space marine was successful!";
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_update_marine");
             })
       }
     },
@@ -58,12 +54,11 @@ export default {
       api.get("/space/chapter")
           .then(response => {
             if(response.status === 200){
-              // document.getElementById("res").innerHTML = "yes chapter";
               this.chapters = response.data;
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            document.getElementById("res_update_marine").innerHTML = error;
           })
     },
     getAllCoordinates(){
@@ -74,7 +69,7 @@ export default {
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            document.getElementById("res_update_marine").innerHTML = error;
           })
     },
     validateName(){
@@ -97,9 +92,9 @@ export default {
 </script>
 
 <template>
-  <span id="res"></span>
+
   <form id="spaceMarine">
-    <span>UPDATE SPACE MARINE:</span>
+    <p class="label">Update space marine:</p>
     <p>ID: {{spaceMarine.id}}</p>
     <div>
       <span>name:</span>
@@ -159,7 +154,6 @@ export default {
       <br/>
       <input type="radio" id="inferno" value="INFERNO_PISTOL" v-model="spaceMarine.weaponType"/>
       <label for="inferno">inferno pistol</label>
-      <!--      <span id="weapon_error"/>-->
     </div>
 
     <div>
@@ -180,6 +174,8 @@ export default {
       <input class="but"  type="submit" @click.prevent="update()" value="save"/>
     </div>
   </form>
+
+  <p id="res_update_marine"></p>
   <div>
     <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
   </div>

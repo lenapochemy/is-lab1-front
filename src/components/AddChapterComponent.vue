@@ -18,9 +18,8 @@ export default {
       if(this.validateName()) {
         api.post("/space/chapter/create", this.chapter)
             .then(response => {
-              document.getElementById("res").innerHTML = "ura add";
-              // this.getChapters();
-              this.$router.push({name: 'main-page'})
+              // document.getElementById("res").innerHTML = "ura add";
+              document.getElementById("res_add_chap").innerHTML = "Adding chapter was successful!"
             })
             .catch(error => {
               errorHandler(error.response.status, "res");
@@ -30,26 +29,13 @@ export default {
     validateName(){
       return validateChapterName(this.chapter.name);
     },
-    // validateChapterName(){
-    //   if(this.chapter.name == ""){
-    //     createErrorMessage("Chapter name can't be empty", "chapter_name_error");
-    //     return false;
-    //   } else {
-    //     cleanErrorMessage("chapter_name_error");
-    //     return true;
-    //   }
-    // },
-    goToMainPage(){
-      this.$router.push({name: 'main-page'})
-    }
   }
 }
 </script>
 
 <template>
-  <span id="res"></span>
   <form id="chapter">
-    <span>CHAPTER:</span>
+    <span>ADD CHAPTER:</span>
     <div>
       <span>chapter name:</span>
       <input type="text" v-model="chapter.name" @change="validateName"/>
@@ -66,10 +52,7 @@ export default {
       <input class="but" type="submit" @click.prevent="addChapter()" value="add"/>
     </div>
   </form>
-
-  <div>
-    <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
-  </div>
+  <p id="res_add_chap"></p>
 </template>
 
 <style>

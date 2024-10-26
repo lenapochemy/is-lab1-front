@@ -28,7 +28,7 @@ export default {
   <header>
 
     <div class="wrapper">
-      <Header v-bind="headerParams"/>
+<!--      <Header v-bind="headerParams"/>-->
 <!--      <RegistrationComponent/>-->
 <!--      <test-component/>-->
     </div>
@@ -48,7 +48,7 @@ export default {
   background-color: deeppink;
   font-weight: bold;
   padding: 4px 9px 4px;
-  font-size: large;
+  font-size: medium;
   //margin-top: 30px;
   //margin-bottom: 30px;
 }

@@ -1,10 +1,4 @@
 <script>
-import {defineComponent} from "vue";
-import SpecialComponent from "@/components/special/MinChapterComponent.vue";
-import AdminComponent from "@/components/AdminComponent.vue";
-import SpaceComponent from "@/components/SpaceComponent.vue";
-import LogOutComponent from "@/components/LogOutComponent.vue";
-import TestComponent from "@/components/TestComponent.vue";
 import MinChapterComponent from "@/components/special/MinChapterComponent.vue";
 import CreateNewChapterComponent from "@/components/special/CreateNewChapterComponent.vue";
 import GreaterMeleeWeaponComponent from "@/components/special/GreaterMeleeWeapon.vue";
@@ -19,26 +13,27 @@ export default {
     CreateNewChapterComponent,
     MinChapterComponent
   },
-  methods:{
-    goToMainPage(){
-      this.$router.push({name: 'main-page'})
-    },
-  }
 
 }
 </script>
 
 <template>
   <MinChapterComponent/>
+  <br/>
   <NameStartComponent/>
+  <br/>
   <GreaterMeleeWeaponComponent/>
+  <br/>
   <SpaceMarineToChapterComponent/>
+  <br/>
   <CreateNewChapterComponent/>
 
-  <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
 
 </template>
 
-<style scoped>
-
+<style >
+.label{
+  color: mediumblue;
+  font-size: large;
+}
 </style>

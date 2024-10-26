@@ -18,9 +18,10 @@ export default {
       if(this.validateName()) {
         api.post("/special/newChapter", this.chapter)
             .then(response => {
+              document.getElementById("res_new_chapter").innerHTML = "Create new chapter was successful!";
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_new_chapter");
             })
       }
     },
@@ -33,18 +34,18 @@ export default {
 </script>
 
 <template>
-  <span id="res"></span>
+  <p class="label">Create new chapter:</p>
+
   <form id="chapter">
-    <span>CHAPTER:</span>
     <div>
-      <span>chapter name:</span>
-      <input type="text" v-model="chapter.name" @change="validateName"/>
+      <label for="write_name">chapter name:</label>
+      <input id="write_name" type="text" v-model="chapter.name" @change="validateName"/>
       <span class="error" id="chapter_name_error"/>
     </div>
 
     <div>
-      <span>chapter parent legion:</span>
-      <input type="text" v-model="chapter.parentLegion"/>
+      <label for="write_parent">chapter parent legion:</label>
+      <input id="write_parent" type="text" v-model="chapter.parentLegion"/>
     </div>
 
     <div>
@@ -52,6 +53,7 @@ export default {
     </div>
   </form>
 
+  <p id="res_new_chapter"></p>
 </template>
 
 <style>

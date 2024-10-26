@@ -5,21 +5,16 @@
     <div class="form-login">
       <label for="login">Логин </label>
       <input type="text" id="login" name="login" v-model="logData.login" @change="validateLogin">
-      <span id="login_error"/>
-<!--      <div class="input-errors" v-for="error of v$.login.$errors" :key="error.$uid">-->
-<!--        <div class="error-msg">{{error.$message}}</div>-->
-<!--      </div>-->
+      <span class="error" id="filter_login_error"/>
     </div>
-<!--    <span class="error" v-if="$v.login.$invalid">Login can't be empty</span>-->
     <div>
       <label for="password">Пароль </label>
       <input type="password" id="password" name="password" v-model="logData.password" @change="validatePassword">
-      <span id="password_error"/>
-<!--      <span v-if="$v.password.$error()">Password can't be empty</span>-->
+      <span class="error" id="filter_password_error"/>
     </div>
     <input class="but" type="submit" value="Войти">
   </form>
-  <span id="res"></span>
+  <span id="res_login"></span>
 
 
 </template>
@@ -27,93 +22,40 @@
 <script>
 import {api} from "@/axios";
 import {errorHandler} from "@/js/utils.js";
-// import useValidate from "@vuelidate/core"
-// import {required} from "@vuelidate/validators"
-// import router from "@/router.js";
+import {validateNotEmpty} from "@/js/validation.js";
 
 export default {
   name: "LogInComponent",
-  // setup (){
-  //   return {v$: useValidate()}
-  // },
   data(){
     return {
-      // v$ :useValidate(),
       logData: {
         login: '',
         password: ''
       }
-      // login: '',
-      // password: ''
     }
   },
-  // validations() {
-  //   return {
-  //     logData: {
-  //       login: {required},
-  //       password: {required}
-  //     }
-  //   }
-  // },
   methods: {
-    createErrorMessage(mess, param){
-      document.getElementById(param + "_error").innerHTML = mess;
-    },
-    cleanErrorMessage(param){
-      document.getElementById(param + "_error").innerHTML = null;
-    },
     validateLogin(){
-      if(this.logData.login == ""){
-        this.createErrorMessage("Login can't be empty", "login");
-        return false;
-      } else {
-        this.cleanErrorMessage("login");
-        return true;
-      }
+      return validateNotEmpty(this.logData.login, "Login", "login");
     },
     validatePassword(){
-      if(this.logData.password == ""){
-        this.createErrorMessage("Password can't be empty", "password");
-        return false;
-      } else {
-        this.cleanErrorMessage("password");
-        return true;
-      }
+      return validateNotEmpty(this.logData.password, "Password", "password");
     },
-    // setLogin(value) {
-    //   this.login = value;
-    //   this.$v.login.$touch()
-    // },
-    // setPassword(value) {
-    //   this.password = value;
-    //   this.$v.password.$touch()
-    // },
     logIn: function (){
-      // this.v$.$validate()
       if(this.validateLogin() && this.validatePassword()) {
         api.post("/user/logIn", this.logData)
             .then(response => {
               if (response.status === 200) {
-                // console.log(response.data);
-                let token = response.data;
-                console.log(token);
-
-                localStorage.setItem("aaaa", "aaaa");
-                console.log(localStorage.getItem("userToken"));
-                // this.$store.commit('setToken', response.data);
                 localStorage.setItem("userLogin", this.logData.login);
-                localStorage.setItem("userToken", token);
+                localStorage.setItem("userToken", response.data);
 
-                this.$router.push({name: 'main-page'})
-                // document.getElementById("res").innerHTML = "vse good";
+                this.$router.push({name: 'menu-page'})
               }
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
-              // document.getElementById("res").innerHTML = "vse bad";
+              errorHandler(error.response.status, "res_login");
             });
-      // } else {
-      //   document.getElementById("res").innerHTML = "validation failed";
+
       }
     }
   }

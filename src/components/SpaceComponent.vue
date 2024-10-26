@@ -4,8 +4,8 @@ import {api} from "@/axios.js";
 import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
 import UpdateComponent from "@/components/UpdateCoordinatesComponent.vue";
 import {
-  validateCategory, validateChapter,
-  validateChapterName, validateCoords,
+  validateCategory,
+  validateChapterName,
   validateCoordX,
   validateCoordY,
   validateFilterType, validateHealth,
@@ -46,11 +46,22 @@ export default{
       filterMarineParam: '',
       inMarineFilter: false,
 
-      // token: '',
       userLogin: '',
       admin: false,
 
     }
+  },
+  mounted() {
+    this.admin = this.$store.state.admin;
+    this.token = localStorage.getItem("userToken");
+    this.userLogin = localStorage.getItem("userLogin")
+    this.getCoordinates();
+    this.getChapters();
+    this.getSpaceMarines();
+    this.getRole();
+    setInterval(this.getCoordinates, 5000);
+    setInterval(this.getChapters, 5000);
+    setInterval(this.getSpaceMarines, 5000);
   },
   methods: {
     getSpaceMarines: function(param){
@@ -58,20 +69,16 @@ export default{
       if(param != null){
         this.currentMarineParam = param;
       }
-      let url = "/space/" + this.currentMarineParam + "/" + this.currentMarinePage;
-      // const headers = {"Content-":Type "application/json", "Authorization": this.token};
-      api.get(url)
+      api.get("/space/" + this.currentMarineParam + "/" + this.currentMarinePage)
           .then(response => {
             if(response.status === 200){
-              document.getElementById("res").innerHTML = "yes";
               this.spaceMarines = response.data.content;
               this.totalMarinePages = response.data.totalPages;
               cleanErrorMessage("filter_marine_error");
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
-          })
+            errorHandler(error.response.status, "res_main_marine");          })
     },
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
@@ -79,7 +86,6 @@ export default{
         api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage)
             .then(response => {
               if (response.status === 200) {
-                document.getElementById("res").innerHTML = "yes";
                 this.spaceMarines = response.data.content;
                 if (this.spaceMarines.length == 0) {
                   document.getElementById("filter_marine_error").innerHTML = "No find chapter with this " + this.filterMarineType;
@@ -88,7 +94,7 @@ export default{
               }
             })
             .catch(error => {
-              document.getElementById("res").innerHTML = error;
+              errorHandler(error.response.status, "res_main_marine");
             })
       }
     },
@@ -100,23 +106,18 @@ export default{
       api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
           .then(response => {
             if(response.status === 200){
-              document.getElementById("res").innerHTML = "yes chapter";
               this.chapters = response.data.content;
               this.totalChapterPages = response.data.totalPages;
-              // this.$store.commit('setChapters', this.chapters);
               cleanErrorMessage("filter_chapter_error");
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            errorHandler(error.response.status, "res_main_chapter");
           })
     },
     filterChapter(){
-      // console.log(this.filterChapterType);
-      // console.log(this.filterChapterParam);
       if(this.validateChapter() && this.validateChapterType()) {
         this.inChapterFilter = true;
-        // console.log("in request");
         let url = "/space/chapter/"
         if (this.filterChapterType == "name") {
           url += "byName/"
@@ -126,17 +127,15 @@ export default{
         api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
             .then(response => {
               if (response.status === 200) {
-                // document.getElementById("res").innerHTML = "yes chapter";
                 this.chapters = response.data.content;
                 if (this.chapters.length == 0) {
                   document.getElementById("filter_chapter_error").innerHTML = "No find chapter with this " + this.filterChapterType;
                 }
                 this.totalChapterPages = response.data.totalPages;
-                // this.$store.commit('setChapters', this.chapters);
               }
             })
             .catch(error => {
-              document.getElementById("res").innerHTML = error;
+              errorHandler(error.response.status, "res_main_chapter");
             })
       }
     },
@@ -148,16 +147,13 @@ export default{
       api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage)
           .then(response => {
             if(response.status === 200){
-              document.getElementById("res").innerHTML = "yes";
               this.coords = response.data.content;
               this.totalCoordPages = response.data.totalPages;
-              // localStorage.setItem("coords", this.coords)
-              // this.$store.commit('setCoords', this.coords);
               cleanErrorMessage("filter_coord_error");
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            errorHandler(error.response.status, "res_main_coord");
           })
     },
     filterCoord(){
@@ -172,18 +168,15 @@ export default{
         api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage)
             .then(response => {
               if (response.status === 200) {
-                document.getElementById("res").innerHTML = "yes";
                 this.coords = response.data.content;
                 if (this.coords.length == 0) {
                   document.getElementById("filter_coord_error").innerHTML = "No find coord with this " + this.filterCoordType;
                 }
                 this.totalCoordPages = response.data.totalPages;
-                // localStorage.setItem("coords", this.coords)
-                // this.$store.commit('setCoords', this.coords);
               }
             })
             .catch(error => {
-              document.getElementById("res").innerHTML = error;
+              errorHandler(error.response.status, "res_main_coord");
             })
       }
     },
@@ -211,49 +204,38 @@ export default{
       this.currentMarinePage++;
       this.getSpaceMarines();
     },
-    addSpaceMarine: function() {
-      // this.$store.commit('setChapters', this.chapters);
-      // this.$store.commit('setCoords', this.coords);
-      this.$router.push({name: 'add-space-marine-page'})
-    },
-    addChapter: function() {
-      this.$router.push({name: 'add-chapter-page'})
-    },
-    addCoordinate: function() {
-      this.$router.push({name: 'add-coordinate-page'})
-    },
     deleteChapter: function(id){
       api.delete("/space/chapter/" + id)
           .then(response => {
-            document.getElementById("res").innerHTML = "delete good";
+            document.getElementById("res_main_chapter").innerHTML = "Deleting chapter was success!";
             this.getChapters();
             this.getSpaceMarines();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "res_main_chapter");
           })
     },
     deleteCoord: function (id){
       api.delete("/space/coord/" + id)
           .then(response => {
-            document.getElementById("res").innerHTML = "delete good";
+            document.getElementById("res_main_coord").innerHTML = "Deleting coordinates was success!";
             this.getCoordinates();
             this.getSpaceMarines();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "res_main_coord");
           })
     },
     deleteSpaceMarine: function (id){
       api.delete("/space/" + id)
           .then(response => {
-            document.getElementById("res").innerHTML = "delete good";
+            document.getElementById("res_main_marine").innerHTML = "Deleting space marine was success!";
             this.getSpaceMarines();
             this.getChapters();
             this.getCoordinates();
           })
           .catch(error => {
-            errorHandler(error.response.status, "res");
+            errorHandler(error.response.status, "res_main_marine");
           })
     },
     updateCoord(coord){
@@ -265,8 +247,6 @@ export default{
       this.$router.push({name: 'update-chapter-page'})
     },
     updateSpaceMarine(spaceMarine){
-      // this.$store.commit('setChapters', this.chapters);
-      // this.$store.commit('setCoords', this.coords);
       this.$store.commit('setSpaceMarine', spaceMarine);
       this.$router.push({name: 'update-space-marine-page'})
     },
@@ -311,50 +291,18 @@ export default{
     },
     getRole(){
       this.admin = this.$store.state.admin;
-      console.log(this.admin);
     },
-    toSpecialPage(){
-      this.$router.push({name: 'special-page'})
-    }
   },
-  mounted() {
-    this.admin = this.$store.state.admin;
-    console.log(this.admin);
-    this.token = localStorage.getItem("userToken");
-    this.userLogin = localStorage.getItem("userLogin")
-    this.currentCoordPage = 0;
-    this.currentCoordParam = 'id';
-    this.currentChapterParam = 'id';
-    this.currentChapterPage = 0;
-    this.currentMarineParam = 'id';
-    this.currentMarinePage = 0;
-    this.getCoordinates();
-    this.getChapters();
-    this.getSpaceMarines();
-    this.getRole();
-  }
+
 }
 </script>
 
 <template>
-<!--  <span id="admin"></span>-->
-  <input class="but" type="button" @click.prevent="toSpecialPage()" value="special page"/>
-<!--  <AdminComponent/>-->
-  <span id="res"></span>
+  <span id="res"/>
 
-<!--  <form @submit.prevent="getSpaceMarines">-->
-<!--    <input class="but" type="submit" value="get marines">-->
-<!--  </form>-->
-<!--  <form @submit.prevent="getChapters">-->
-<!--    <input class="but" type="submit" value="get chapters">-->
-<!--  </form>-->
-<!--  <form @submit.prevent="getCoordinates">-->
-<!--    <input class="but" type="submit" value="get coords">-->
-<!--  </form>-->
-<!--  <span id="res"></span>-->
-
-
-  <table border="1" id="coord_table" v-if="coords.length >0">
+  <p class="label">Coordinates:</p>
+  <p id="res_main_coord" class="error"></p>
+  <table border="1" id="coord_table" v-if="coords.length > 0">
     <thead>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('x')" value="X"/></th>
@@ -368,7 +316,6 @@ export default{
       <td>{{coord.y}}</td>
       <td>{{coord.user.login}}</td>
       <td v-if="admin || coord.user.login === this.userLogin">
-<!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteCoord(coord.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateCoord(coord)" value="update"/>
       </td>
@@ -397,10 +344,11 @@ export default{
     <span>Page number {{currentCoordPage+1}}</span>
     <input class="but"  type="submit" v-if="currentCoordPage > 0" @click.prevent="getPrevPageCoordinates" value="previous page"/>
     <input class="but"  type="submit" v-if="currentCoordPage + 1 < totalCoordPages" @click.prevent="getNextPageCoordinates" value="next page"/>
-    <input class="but"  type="submit" @click.prevent="addCoordinate" value="add new coordinate"/>
   </div>
 
 
+  <p class="label">Chapters:</p>
+  <p id="res_main_chapter" class="error"></p>
   <table border="1" id="chapter_table">
     <thead>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('id')" value="ID"/></th>
@@ -415,7 +363,6 @@ export default{
       <td>{{chapter.parentLegion}}</td>
       <td>{{chapter.user.login}}</td>
       <td v-if="admin || chapter.user.login === this.userLogin">
-<!--      <td>-->
           <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
           <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
       </td>
@@ -443,8 +390,11 @@ export default{
     <span>Page number {{currentChapterPage+1}}</span>
     <input class="but"  type="submit" v-if="currentChapterPage > 0" @click.prevent="getPrevPageChapter" value="previous page"/>
     <input class="but"  type="submit" v-if="currentChapterPage + 1 < totalChapterPages" @click.prevent="getNextPageChapter" value="next page"/>
-    <input class="but"  type="submit" @click.prevent="addChapter" value="add new chapter"/>
   </div>
+
+
+  <p class="label">Space Marines:</p>
+  <p id="res_main_marine" class="error"></p>
 
   <table border="1" id="space_marine_table">
     <thead>
@@ -464,17 +414,14 @@ export default{
       <td>{{marine.id}}</td>
       <td>{{marine.name}}</td>
       <td>{{marine.coordinates.id}}</td>
-      <!--      <td>{{marine.coordinates.y}}</td>-->
       <td>{{marine.creationDate}}</td>
       <td>{{marine.chapter.id}}</td>
-      <!--      <td>{{marine.chapter.parentLegion}}</td>-->
       <td>{{marine.health}}</td>
       <td>{{marine.category}}</td>
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
       <td>{{marine.user.login}}</td>
       <td v-if="admin || marine.user.login === this.userLogin">
-<!--      <td>-->
         <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
       </td>
@@ -488,12 +435,9 @@ export default{
       <select v-model="filterMarineType" @change="validateMarineType">
         <option value="Name">name</option>
         <option value="Coord">coordinates id</option>
-<!--        <option value="Date">date and time</option>-->
         <option value="Chapter">chapter id</option>
         <option value="Health">health</option>
         <option value="Category">category</option>
-<!--        <option value="WeaponType">weapon type</option>-->
-<!--        <option value="MeleeWeapon">melee weapon</option>-->
       </select>
       <input type="text" v-model="filterMarineParam" @change="validateMarine"/>
       <input class="but" type="submit" @click.prevent="filterSpaceMarine()" value="filter"/>
@@ -514,7 +458,6 @@ export default{
     <span>Page number {{currentMarinePage+1}}</span>
     <input class="but"  type="submit" v-if="currentMarinePage > 0" @click.prevent="getPrevPageMarine" value="previous page"/>
     <input class="but"  type="submit" v-if="currentMarinePage + 1 < totalMarinePages" @click.prevent="getNextPageMarine" value="next page"/>
-    <input class="but"  type="submit" @click.prevent="addSpaceMarine" value="add new space marine"/>
   </div>
 
 </template>

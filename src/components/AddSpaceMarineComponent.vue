@@ -34,12 +34,12 @@ export default{
           this.validateHealth() && this.validateCategory()) {
         api.post("/space/create", this.spaceMarine)
             .then(response => {
-              // document.getElementById("res").innerHTML = "ura add";
+              document.getElementById("res_add_marine").innerHTML = "Adding coordinates was successful!";
               // this.getSpaceMarines();
-              this.$router.push({name: 'main-page'})
+              // this.$router.push({name: 'main-page'})
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_add_marine");
             })
       }
     },
@@ -52,7 +52,7 @@ export default{
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            document.getElementById("res_add_marine").innerHTML = error;
           })
     },
     getAllCoordinates(){
@@ -63,7 +63,7 @@ export default{
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            document.getElementById("res_add_marine").innerHTML = error;
           })
     },
     validateName(){
@@ -81,27 +81,17 @@ export default{
     validateCategory(){
       return validateCategory(this.spaceMarine.category);
     },
-    goToMainPage(){
-      this.$router.push({name: 'main-page'})
-    }
   },
   mounted() {
     this.getAllCoordinates();
     this.getAllChapters();
-    // this.coords = this.$store.state.coords;
-    // this.chapters = this.$store.state.chapters;
-    // console.log(this.chapters)
-    // console.log(this.$store.state.coords)
-    // this.coords = this.$router.state.coords;
-    // this.chapters = this.$router.state.chapters;
-    // this.coords = localStorage.getItem("coords")
   }
 }
 </script>
 
 <template>
   <form id="spaceMarine">
-    <span>SPACE MARINE:</span>
+    <span>ADD SPACE MARINE:</span>
     <div>
       <span>name:</span>
       <input type="text" v-model="spaceMarine.name" @change="validateName"/>
@@ -121,10 +111,6 @@ export default{
       <select v-model="spaceMarine.chapter.id" @change="validateChapter">
         <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
       </select>
-      <!--      <div v-for="chapter in chapters">-->
-      <!--        <input type="radio" v-model="spaceMarine.chapter.id"  v-bind:value="chapter.id" @change="validateChapter"/>-->
-      <!--        <label>name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</label>-->
-      <!--      </div>-->
 
       <span class="error" id="chapter_error"/>
     </div>
@@ -185,9 +171,8 @@ export default{
       <input class="but"  type="submit" @click.prevent="addSpaceMarine()" value="add"/>
     </div>
   </form>
-  <div>
-    <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
-  </div>
+
+  <p id="res_add_marine"></p>
 </template>
 
 <style scoped>

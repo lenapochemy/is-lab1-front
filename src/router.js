@@ -1,14 +1,10 @@
 import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import StartView from "@/views/StartView.vue";
-import MainView from "@/views/MainView.vue";
-import AddChapterComponent from "@/components/AddChapterComponent.vue";
-import AddCoordinateComponent from "@/components/AddCoordinateComponent.vue";
-import AddSpaceMarineComponent from "@/components/AddSpaceMarineComponent.vue";
 import UpdateCoordinatesComponent from "@/components/UpdateCoordinatesComponent.vue";
 import UpdateChapterComponent from "@/components/UpdateChapterComponent.vue";
 import UpdateSpaceMarineComponent from "@/components/UpdateSpaceMarineComponent.vue";
-import AdminComponent from "@/components/AdminComponent.vue";
-import SpecialView from "@/views/SpecialView.vue";
+
+import Menu from "@/views/Menu.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -19,27 +15,12 @@ const router = createRouter({
             component: StartView
         },
         {
-            path: '/main',
-            name: 'main-page',
-            component: MainView,
+            path: '/menu',
+            name: 'menu-page',
+            component: Menu,
             beforeEnter: (to, from, next) => {
                 (localStorage.getItem("userToken") !== null) ? next() : next({name: 'start-page'})
             }
-        },
-        {
-            path: '/addChapter',
-            name: 'add-chapter-page',
-            component: AddChapterComponent,
-        },
-        {
-            path: '/addCoordinate',
-            name: 'add-coordinate-page',
-            component: AddCoordinateComponent
-        },
-        {
-            path: '/addSpaceMarine',
-            name: 'add-space-marine-page',
-            component: AddSpaceMarineComponent
         },
         {
             path: '/updateCoordinate',
@@ -56,16 +37,7 @@ const router = createRouter({
             name: 'update-space-marine-page',
             component: UpdateSpaceMarineComponent
         },
-        {
-            path: '/admin',
-            name: 'admin-page',
-            component: AdminComponent
-        },
-        {
-            path: '/special',
-            name: 'special-page',
-            component: SpecialView
-        },
+
     ]
 })
 

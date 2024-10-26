@@ -20,13 +20,12 @@ export default {
   methods:{
     update(){
       if(this.validateName()){
-        // console.log("in request");
         api.post("/space/chapter/update", this.chapter)
             .then(response => {
-              this.$router.push({name: 'main-page'})
+              document.getElementById("res_update_chap").innerHTML = "Update chapter was successful!"
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_update_chap");
             })
       }
     },
@@ -34,16 +33,17 @@ export default {
       return validateChapterName(this.chapter.name);
     },
     goToMainPage(){
-      this.$router.push({name: 'main-page'})
+      this.$router.push({name: 'menu-page'})
     }
   }
 }
 </script>
 
 <template>
-  <span id="res"></span>
+
+
   <form id="chapter">
-    <span>UPDATE CHAPTER:</span>
+    <p class="label">Update chapter:</p>
     <b>ID: {{chapter.id}}</b>
     <div>
       <span>chapter name:</span>
@@ -54,14 +54,13 @@ export default {
     <div>
       <span>chapter parent legion:</span>
       <input type="text" v-model="chapter.parentLegion"/>
-      <!--      <span id="chapter_parent_error"/>-->
     </div>
 
     <div>
       <input class="but" type="submit" @click.prevent="update" value="update"/>
     </div>
   </form>
-
+  <p id="res_update_chap"></p>
   <div>
     <input class="but"  type="submit" @click.prevent="goToMainPage" value="back to main page"/>
   </div>

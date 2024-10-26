@@ -1,6 +1,7 @@
 <script >
 import {api} from "@/axios.js";
 import {validateNotEmpty} from "@/js/validation.js";
+import {errorHandler} from "@/js/utils.js";
 
 export default {
   name: "GreaterMeleeWeaponComponent",
@@ -22,6 +23,7 @@ export default {
                   document.getElementById("res_melee").innerHTML = "No this space marines";
                   this.callGreater = false;
                 } else {
+                  document.getElementById("res_melee").innerHTML = "Find space marines was successful!";
                   this.callGreater = true;
                 }
                 //
@@ -29,7 +31,8 @@ export default {
               }
             })
             .catch(error => {
-              document.getElementById("res_melee").innerHTML = error;
+              // document.getElementById("res_melee").innerHTML = error;
+              errorHandler(error.response.status, "res_melee");
             })
       }
     },
@@ -42,12 +45,10 @@ export default {
 </script>
 
 <template>
+  <p class="label">Find all space marine with greater melee weapon:</p>
   <div>
 
-    <input class="but"  type="button" @click.prevent="getWithGreaterMeleeWeapon" value="get space marine with melee weapon greater than"/>
-
-    <span>choose melee weapon:</span>
-    <br/>
+    <p>Choose melee weapon:</p>
     <input type="radio" id="chain" value="CHAIN_AXE" v-model="meleeWeapon" @change="validateMeleeWeapon"/>
     <label for="chain">chain axe</label>
     <br/>
@@ -59,7 +60,9 @@ export default {
     <span class="error" id="filter_melee_error"></span>
   </div>
 
-  <span id="res_melee"></span>
+  <input class="but"  type="button" @click.prevent="getWithGreaterMeleeWeapon" value="get space marine with greater melee weapon"/>
+
+  <p id="res_melee"></p>
 
   <table border="1" id="space_marine_table" v-if="callGreater">
     <thead>

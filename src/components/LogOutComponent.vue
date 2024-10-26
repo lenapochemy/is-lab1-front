@@ -24,5 +24,15 @@ export default {
 </template>
 
 <style scoped>
-
+.but{
+  background-color: blueviolet;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: medium;
+  //margin-top: 30px;
+  //margin-bottom: 30px;
+}
+.but:hover, .but:focus{
+  background-color: mediumpurple;
+}
 </style>

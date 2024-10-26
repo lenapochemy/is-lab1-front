@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {cleanErrorMessage} from "@/js/utils.js";
+import {errorHandler} from "@/js/utils.js";
 
 export default {
   name: "SpecialComponent",
@@ -35,10 +35,12 @@ export default {
           .then(response => {
             if(response.status === 200){
               this.minSpaceMarine = response.data;
+              document.getElementById("res_min").innerHTML = "Find space marine was successful!";
             }
           })
           .catch(error => {
-            document.getElementById("res").innerHTML = error;
+            // document.getElementById("res").innerHTML = error;
+            errorHandler(error.response.status, "res_min");
           })
     }
   }
@@ -46,6 +48,7 @@ export default {
 </script>
 
 <template>
+  <p class="label">Find space marine with minimal chapter id:</p>
   <input class="but"  type="button" @click.prevent="getSpaceMarineWithMinChapter" value="get space marine with min chapter"/>
 
   <table border="1" id="space_marine_table" v-if="callMinSpaceMarine">
@@ -83,7 +86,7 @@ export default {
     </tbody>
   </table>
 
-
+<p id="res_min"/>
 
 </template>
 

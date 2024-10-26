@@ -42,5 +42,15 @@ export default {
 </template>
 
 <style scoped>
-
+.tab-button{
+  background-color: lightpink;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: large;
+  /*margin: 30px 10px;*/
+  margin: auto;
+}
+.tab-button:hover, .tab-button:focus, .tab-button:active{
+  background-color: deeppink;
+}
 </style>
