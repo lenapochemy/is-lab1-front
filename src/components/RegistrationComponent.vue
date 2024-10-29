@@ -51,7 +51,7 @@ export default {
               }
             })
             .catch(error => {
-              errorHandler(error.response.status, "res_reg", "reg")
+              errorHandler(error.response.status, "res_reg", "reg", error.response.data);
             });
       }
     }
