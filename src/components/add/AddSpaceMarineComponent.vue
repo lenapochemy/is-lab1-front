@@ -44,7 +44,7 @@ export default{
       }
     },
     getAllChapters(){
-      api.get("/space/chapter")
+      api.get("/space/chapter/user")
           .then(response => {
             if(response.status === 200){
               // document.getElementById("res").innerHTML = "yes chapter";
@@ -56,7 +56,7 @@ export default{
           })
     },
     getAllCoordinates(){
-      api.get("/space/coord")
+      api.get("/space/coord/user")
           .then(response => {
             if(response.status === 200){
               this.coords = response.data;

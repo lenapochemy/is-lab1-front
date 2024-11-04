@@ -69,7 +69,7 @@ export default{
       if(param != null){
         this.currentMarineParam = param;
       }
-      api.get("/space/" + this.currentMarineParam + "/" + this.currentMarinePage)
+      api.get("/space/all/all/" + this.currentMarineParam + "/" + this.currentMarinePage + "/10")
           .then(response => {
             if(response.status === 200){
               this.spaceMarines = response.data.content;
@@ -83,7 +83,7 @@ export default{
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
         this.inMarineFilter = true;
-        api.get("/space/by" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage)
+        api.get("/space/" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage + "/10")
             .then(response => {
               if (response.status === 200) {
                 this.spaceMarines = response.data.content;
@@ -103,7 +103,7 @@ export default{
       if(param != null){
         this.currentChapterParam = param;
       }
-      api.get("/space/chapter/" + this.currentChapterParam + "/" + this.currentChapterPage)
+      api.get("/space/chapter/all/all/" + this.currentChapterParam + "/" + this.currentChapterPage + "/10")
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data.content;
@@ -118,13 +118,8 @@ export default{
     filterChapter(){
       if(this.validateChapter() && this.validateChapterType()) {
         this.inChapterFilter = true;
-        let url = "/space/chapter/"
-        if (this.filterChapterType == "name") {
-          url += "byName/"
-        } else {
-          url += "byParentLegion/"
-        }
-        api.get(url + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage)
+
+        api.get("/space/chapter/" + this.filterChapterType + "/" + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage + "/10")
             .then(response => {
               if (response.status === 200) {
                 this.chapters = response.data.content;
@@ -144,7 +139,7 @@ export default{
         this.currentCoordParam = param;
       }
       this.inCoordFilter = false;
-      api.get("/space/coord/" + this.currentCoordParam + "/" + this.currentCoordPage)
+      api.get("/space/coord/all/all/" + this.currentCoordParam + "/" + this.currentCoordPage + "/10")
           .then(response => {
             if(response.status === 200){
               this.coords = response.data.content;
@@ -159,13 +154,7 @@ export default{
     filterCoord(){
       if(this.validateCoordType() && this.validateCoord()) {
         this.inCoordFilter = true;
-        let url = "/space/coord/"
-        if (this.filterCoordType == "x") {
-          url += "byX/"
-        } else {
-          url += "byY/"
-        }
-        api.get(url + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage)
+        api.get("/space/coord/" + this.filterCoordType + "/" + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage + "/10")
             .then(response => {
               if (response.status === 200) {
                 this.coords = response.data.content;
@@ -433,11 +422,10 @@ export default{
     <span>Filter for space marines:</span>
     <form>
       <select v-model="filterMarineType" @change="validateMarineType">
-        <option value="Name">name</option>
-        <option value="Coord">coordinates id</option>
-        <option value="Chapter">chapter id</option>
-        <option value="Health">health</option>
-        <option value="Category">category</option>
+        <option value="name">name</option>
+        <option value="coord">coordinates id</option>
+        <option value="chapter">chapter id</option>
+        <option value="health">health</option>
       </select>
       <input type="text" v-model="filterMarineParam" @change="validateMarine"/>
       <input class="but" type="submit" @click.prevent="filterSpaceMarine()" value="filter"/>
