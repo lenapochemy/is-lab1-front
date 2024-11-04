@@ -1,22 +1,24 @@
 <template>
 
-  <h1>Вход</h1>
+  <h1>LogIn</h1>
   <form @submit.prevent="logIn">
     <div class="form-login">
-      <label for="login">Логин </label>
+      <label for="login">Login </label>
       <input type="text" id="login" name="login" v-model="logData.login" @change="validateLogin">
       <span class="error" id="filter_login_error"/>
     </div>
     <div>
-      <label for="password">Пароль </label>
+      <label for="password">Password </label>
       <input type="password" id="password" name="password" v-model="logData.password" @change="validatePassword">
       <span class="error" id="filter_password_error"/>
     </div>
-    <input class="but" type="submit" value="Войти">
+    <input class="but" type="submit" value="LogIn">
   </form>
   <span id="res_login"></span>
 
-
+  <div>
+    <img alt="cat picture" src="../assets/cat.jpg"/>
+  </div>
 </template>
 
 <script>
@@ -79,4 +81,8 @@ label{
   font-size: large;
 }
 
+img{
+  width: 320px;
+  height: 320px;
+}
 </style>

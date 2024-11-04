@@ -1,19 +1,48 @@
 <script >
+import {api} from "@/axios.js";
+import {errorHandler} from "@/js/utils.js";
+
 export default {
   name: "Header",
-  props: {
-    title: String,
-    name: String,
-    group: String,
-    variant: String
+  data() {
+    return {
+      name: String,
+      role: String
+    }
+  },
+  mounted() {
+    this.name = localStorage.getItem("userLogin");
+    this.getRole();
+  },
+  methods:{
+    getRole(){
+      api.get("/user/admin/role")
+          .then(response => {
+            let role = response.data;
+            this.role = this.getRoleText(role);
+          })
+          .catch(error => {
+            errorHandler(error.response.status, "admin");
+          })
+    },
+    getRoleText(role){
+      switch (role){
+        case "APPROVED_ADMIN":
+          return "admin";
+        default:
+          return "user";
+      }
+    },
   }
 }
 </script>
 
 <template>
-  <div >
-    <h1 id="my_name">{{name}}, {{group}}</h1>
-    <h3 id="lab_work">{{title}}, вариант {{variant}}</h3>
+  <div>
+    <span class="my_name">Your login: </span>
+    <span class="data">{{name}}</span>
+    <span class="my_name"> and your role: </span>
+    <span class="data">{{role}}</span>
   </div>
 
 
@@ -35,13 +64,19 @@ h3 {
 }
 
 
-#my_name, #lab_work {
-  font-family: fantasy;
-  color: deeppink;
+.my_name, .data, #lab_work {
+  //font-family: fantasy;
+  //color: deeppink;
+  font-size: large;
+  font-weight: bold;
   //text-shadow: 2px 2px 2px black;
-  font-size: 3rem;
-  word-spacing: 4pt;
-  letter-spacing: 2pt;
+  //font-size: 3rem;
+  //word-spacing: 4pt;
+  //letter-spacing: 2pt;
+}
+
+.data{
+  color: blue;
 }
 
 #lab_work{

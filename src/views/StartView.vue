@@ -12,7 +12,7 @@ export default {
   },
   data(){
     return {
-      buttons: [{"value": "Registration", "name": "Регистрация"}, {"value": "LogIn", "name": "Вход"}],
+      buttons: [{"value": "Registration", "name": "Registration"}, {"value": "LogIn", "name": "LogIn"}],
       currentButton: "LogIn"
     }
   },
@@ -25,6 +25,7 @@ export default {
 </script>
 
 <template>
+
   <div class="start-item">
     <button
         v-for="button in buttons"
@@ -36,9 +37,7 @@ export default {
     </button>
     <component v-bind:is="currentButtonComponent"></component>
   </div>
-  <div>
-    <TestComponent/>
-  </div>
+
 </template>
 
 <style scoped>

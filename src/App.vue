@@ -25,20 +25,8 @@ export default {
 </script>
 
 <template>
-  <header>
-
-    <div class="wrapper">
-<!--      <Header v-bind="headerParams"/>-->
-<!--      <RegistrationComponent/>-->
-<!--      <test-component/>-->
-    </div>
-  </header>
-
-<!--  <router-view/>-->
-
   <main>
     <router-view/>
-<!--    <StartView/>-->
   </main>
 </template>
 

@@ -1,21 +1,23 @@
 <template>
 
-  <h1>Регистрация</h1>
+  <h1>Registration</h1>
   <form @submit.prevent="registration">
     <div>
-      <label for="login">Логин </label>
+      <label for="login">LogIn </label>
       <input type="text" id="login" name="login" v-model="regData.login" @change="validateLogin" >
       <span class="error" id="filter_login_error"/>
     </div>
     <div>
-      <label for="password">Пароль </label>
+      <label for="password">Password </label>
       <input type="password" id="password" name="password" v-model="regData.password" @change="validatePassword">
       <span class="error" id="filter_password_error"/>
     </div>
-    <input class="but" type="submit" value="Зарегистрироваться">
+    <input class="but" type="submit" value="Registration">
   </form>
   <p id="res_reg"></p>
-
+  <div>
+    <img alt="cat picture" src="../assets/cat2.jpg"/>
+  </div>
 </template>
 
 <script>
@@ -61,6 +63,21 @@ export default {
 </script>
 
 <style scoped>
+.but{
+  background-color: deeppink;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: large;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.but:hover, .but:focus{
+  background-color: lightpink;
+}
+
+label{
+  font-size: large;
+}
 
 </style>
 

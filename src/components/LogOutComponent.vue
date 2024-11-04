@@ -18,9 +18,8 @@ export default {
 </script>
 
 <template>
-  <button id="out" class="but" @click.prevent="logout">Выйти</button>
-  <br>
-  <span id="logout"></span>
+  <button id="out" class="but" @click.prevent="logout">LogOut</button>
+
 </template>
 
 <style scoped>
@@ -31,6 +30,8 @@ export default {
   font-size: medium;
   //margin-top: 30px;
   //margin-bottom: 30px;
+  position: absolute;
+  right: 0;
 }
 .but:hover, .but:focus{
   background-color: mediumpurple;

@@ -10,8 +10,10 @@ import AdminComponent from "@/components/AdminComponent.vue";
 import EditChapterComponent from "@/components/edit/EditChapterComponent.vue";
 import EditCoordComponent from "@/components/edit/EditCoordComponent.vue";
 import EditSpaceMarineComponent from "@/components/edit/EditSpaceMarineComponent.vue";
+import Header from "@/components/Header.vue";
 export default {
   components:{
+    Header,
     AdminComponent,
     SpaceComponent,
     LogOutComponent,
@@ -35,7 +37,7 @@ export default {
         {"value": "EditCoord", "name": "Coordinates editing info"},
         {"value": "EditSpaceMarine", "name": "Space marine editing info"}
       ],
-      currentButton: "Space",
+      currentButton: "Space"
     }
   },
   computed: {
@@ -49,10 +51,14 @@ export default {
 </script>
 
 <template>
-
-
+<header>
+  <Header/>
+  <br>
+  <LogOutComponent/>
+</header>
+<body>
   <div>
-    <LogOutComponent/>
+
     <button
       v-for="button in buttons"
       v-bind:key="button"
@@ -61,7 +67,7 @@ export default {
     <component v-bind:is="currentButtonComponent"></component>
   </div>
   <br>
-
+  </body>
 
 </template>
 

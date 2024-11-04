@@ -49,13 +49,10 @@ export default{
       filterMarineParam: '',
       inMarineFilter: false,
 
-      userLogin: '',
-
     }
   },
   mounted() {
     this.token = localStorage.getItem("userToken");
-    this.userLogin = localStorage.getItem("userLogin")
     this.getCoordinates();
     this.getChapters();
     this.getSpaceMarines();
@@ -336,6 +333,81 @@ export default{
 <template>
   <span id="res"/>
 
+  <p class="label">Space Marines:</p>
+  <p id="res_main_marine" class="error"></p>
+
+  <table border="1" id="space_marine_table">
+    <thead>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('id')" value="ID"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('name')" value="name"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('coordinates')" value="coord id"/></th>
+    <th>coord X</th>
+    <th>coord Y</th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('creationDate')" value="date and time"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('chapter')" value="chapter id"/></th>
+    <th>chapter name</th>
+    <th>chapter parent legion</th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('health')" value="health"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('category')" value="category"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('weaponType')" value="weapon type"/></th>
+    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('meleeWeapon')" value="melee weapon"/></th>
+    <th>owner</th>
+    </thead>
+    <tbody>
+    <tr v-for="marine in spaceMarines">
+      <td>{{marine.id}}</td>
+      <td>{{marine.name}}</td>
+      <td>{{marine.coordinates.id}}</td>
+      <td>{{marine.coordinates.x}}</td>
+      <td>{{marine.coordinates.y}}</td>
+      <td>{{marine.creationDate}}</td>
+      <td>{{marine.chapter.id}}</td>
+      <td>{{marine.chapter.name}}</td>
+      <td>{{marine.chapter.parentLegion}}</td>
+      <td>{{marine.health}}</td>
+      <td>{{marine.category}}</td>
+      <td>{{marine.weaponType}}</td>
+      <td>{{marine.meleeWeapon}}</td>
+      <td>{{marine.user.login}}</td>
+      <td v-if="check_marine_owner(marine.id)" >
+        <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
+        <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <span>Filter for space marines:</span>
+    <form>
+      <select v-model="filterMarineType" @change="validateMarineType">
+        <option value="name">name</option>
+        <option value="coord">coordinates id</option>
+        <option value="chapter">chapter id</option>
+        <option value="health">health</option>
+      </select>
+      <input type="text" v-model="filterMarineParam" @change="validateMarine"/>
+      <input class="but" type="submit" @click.prevent="filterSpaceMarine()" value="filter"/>
+
+      <span class="error" id="filter_marine_error"></span>
+      <span class="error" id="marine_error"></span>
+      <span class="error" id="name_error"></span>
+      <span class="error" id="coord_error"></span>
+      <span class="error" id="chapter_error"></span>
+      <span class="error" id="health_error"></span>
+      <span class="error" id="category_error"></span>
+
+    </form>
+    <input class="but" type="button" v-if="inMarineFilter" @click.prevent="getSpaceMarines()" value="delete filter"/>
+  </div>
+
+  <div>
+    <span>Page number {{currentMarinePage+1}}</span>
+    <input class="but"  type="submit" v-if="currentMarinePage > 0" @click.prevent="getPrevPageMarine" value="previous page"/>
+    <input class="but"  type="submit" v-if="currentMarinePage + 1 < totalMarinePages" @click.prevent="getNextPageMarine" value="next page"/>
+  </div>
+
+
   <p class="label">Coordinates:</p>
   <p id="res_main_coord" class="error"></p>
   <table border="1" id="coord_table" v-if="coords.length > 0">
@@ -429,71 +501,6 @@ export default{
   </div>
 
 
-  <p class="label">Space Marines:</p>
-  <p id="res_main_marine" class="error"></p>
-
-  <table border="1" id="space_marine_table">
-    <thead>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('id')" value="ID"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('name')" value="name"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('coordinates')" value="coord id"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('creationDate')" value="date and time"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('chapter')" value="chapter id"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('health')" value="health"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('category')" value="category"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('weaponType')" value="weapon type"/></th>
-    <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('meleeWeapon')" value="melee weapon"/></th>
-    <th>owner</th>
-    </thead>
-    <tbody>
-    <tr v-for="marine in spaceMarines">
-      <td>{{marine.id}}</td>
-      <td>{{marine.name}}</td>
-      <td>{{marine.coordinates.id}}</td>
-      <td>{{marine.creationDate}}</td>
-      <td>{{marine.chapter.id}}</td>
-      <td>{{marine.health}}</td>
-      <td>{{marine.category}}</td>
-      <td>{{marine.weaponType}}</td>
-      <td>{{marine.meleeWeapon}}</td>
-      <td>{{marine.user.login}}</td>
-      <td v-if="check_marine_owner(marine.id)" >
-        <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
-        <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-
-  <div>
-    <span>Filter for space marines:</span>
-    <form>
-      <select v-model="filterMarineType" @change="validateMarineType">
-        <option value="name">name</option>
-        <option value="coord">coordinates id</option>
-        <option value="chapter">chapter id</option>
-        <option value="health">health</option>
-      </select>
-      <input type="text" v-model="filterMarineParam" @change="validateMarine"/>
-      <input class="but" type="submit" @click.prevent="filterSpaceMarine()" value="filter"/>
-
-      <span class="error" id="filter_marine_error"></span>
-      <span class="error" id="marine_error"></span>
-      <span class="error" id="name_error"></span>
-      <span class="error" id="coord_error"></span>
-      <span class="error" id="chapter_error"></span>
-      <span class="error" id="health_error"></span>
-      <span class="error" id="category_error"></span>
-
-    </form>
-    <input class="but" type="button" v-if="inMarineFilter" @click.prevent="getSpaceMarines()" value="delete filter"/>
-  </div>
-
-  <div>
-    <span>Page number {{currentMarinePage+1}}</span>
-    <input class="but"  type="submit" v-if="currentMarinePage > 0" @click.prevent="getPrevPageMarine" value="previous page"/>
-    <input class="but"  type="submit" v-if="currentMarinePage + 1 < totalMarinePages" @click.prevent="getNextPageMarine" value="next page"/>
-  </div>
 
 </template>
 
