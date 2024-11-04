@@ -35,7 +35,7 @@ export default {
         {"value": "EditCoord", "name": "Coordinates editing info"},
         {"value": "EditSpaceMarine", "name": "Space marine editing info"}
       ],
-      currentButton: "Admin",
+      currentButton: "Space",
     }
   },
   computed: {

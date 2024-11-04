@@ -19,8 +19,11 @@ export default{
   data(){
     return {
       spaceMarines: [],
+      users_spaceMarines_id: [],
       coords: [],
+      users_coords_id: [],
       chapters: [],
+      users_chapters_id: [],
 
       currentCoordPage: 0,
       currentCoordParam: 'id',
@@ -47,18 +50,18 @@ export default{
       inMarineFilter: false,
 
       userLogin: '',
-      admin: false,
 
     }
   },
   mounted() {
-    this.admin = this.$store.state.admin;
     this.token = localStorage.getItem("userToken");
     this.userLogin = localStorage.getItem("userLogin")
     this.getCoordinates();
     this.getChapters();
     this.getSpaceMarines();
-    this.getRole();
+    this.getUsersSpaceMarines();
+    this.getUsersChapters();
+    this.getUsersCoordinates();
     // setInterval(this.getCoordinates, 5000);
     // setInterval(this.getChapters, 5000);
     // setInterval(this.getSpaceMarines, 5000);
@@ -78,7 +81,20 @@ export default{
             }
           })
           .catch(error => {
-            errorHandler(error.response.status, "res_main_marine");          })
+            errorHandler(error.response.status, "res_main_marine");
+          })
+    },
+    getUsersSpaceMarines: function(){
+      api.get("/space/user/id")
+          .then(response => {
+            if(response.status === 200){
+              this.users_spaceMarines_id = response.data;
+              cleanErrorMessage("filter_marine_error");
+            }
+          })
+          .catch(error => {
+            errorHandler(error.response.status, "res_main_marine");
+          })
     },
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
@@ -115,6 +131,18 @@ export default{
             errorHandler(error.response.status, "res_main_chapter");
           })
     },
+    getUsersChapters: function(){
+      api.get("/space/chapter/user/id")
+          .then(response => {
+            if(response.status === 200){
+              this.users_chapters_id = response.data;
+              cleanErrorMessage("filter_chapter_error");
+            }
+          })
+          .catch(error => {
+            errorHandler(error.response.status, "res_main_chapter");
+          })
+    },
     filterChapter(){
       if(this.validateChapter() && this.validateChapterType()) {
         this.inChapterFilter = true;
@@ -144,6 +172,18 @@ export default{
             if(response.status === 200){
               this.coords = response.data.content;
               this.totalCoordPages = response.data.totalPages;
+              cleanErrorMessage("filter_coord_error");
+            }
+          })
+          .catch(error => {
+            errorHandler(error.response.status, "res_main_coord");
+          })
+    },
+    getUsersCoordinates: function(){
+      api.get("/space/coord/user/id")
+          .then(response => {
+            if(response.status === 200){
+              this.users_coords_id = response.data;
               cleanErrorMessage("filter_coord_error");
             }
           })
@@ -278,9 +318,16 @@ export default{
           return validateNotEmpty(this.filterMarineParam, "Melee weapon", "marine");
       }
     },
-    getRole(){
-      this.admin = this.$store.state.admin;
+
+    check_marine_owner(id){
+      return this.users_spaceMarines_id.includes(id);
     },
+    check_chapter_owner(id){
+      return this.users_chapters_id.includes(id);
+    },
+    check_coord_owner(id){
+      return this.users_coords_id.includes(id);
+    }
   },
 
 }
@@ -304,7 +351,7 @@ export default{
       <td>{{coord.x}}</td>
       <td>{{coord.y}}</td>
       <td>{{coord.user.login}}</td>
-      <td v-if="admin || coord.user.login === this.userLogin">
+      <td v-if="check_coord_owner(coord.id)">
         <input class="but"  type="submit" @click.prevent="deleteCoord(coord.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateCoord(coord)" value="update"/>
       </td>
@@ -351,7 +398,7 @@ export default{
       <td>{{chapter.name}}</td>
       <td>{{chapter.parentLegion}}</td>
       <td>{{chapter.user.login}}</td>
-      <td v-if="admin || chapter.user.login === this.userLogin">
+      <td v-if="check_chapter_owner(chapter.id)">
           <input class="but"  type="submit" @click.prevent="deleteChapter(chapter.id)" value="delete"/>
           <input class="but"  type="submit" @click.prevent="updateChapter(chapter)" value="update"/>
       </td>
@@ -410,7 +457,7 @@ export default{
       <td>{{marine.weaponType}}</td>
       <td>{{marine.meleeWeapon}}</td>
       <td>{{marine.user.login}}</td>
-      <td v-if="admin || marine.user.login === this.userLogin">
+      <td v-if="check_marine_owner(marine.id)" >
         <input class="but"  type="submit" @click.prevent="deleteSpaceMarine(marine.id)" value="delete"/>
         <input class="but"  type="submit" @click.prevent="updateSpaceMarine(marine)" value="update"/>
       </td>
