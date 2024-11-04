@@ -18,9 +18,9 @@ const router = createRouter({
             path: '/main',
             name: 'menu-page',
             component: Menu,
-            beforeEnter: (to, from, next) => {
-                (localStorage.getItem("userToken") !== null) ? next() : next({name: 'start-page'})
-            }
+            // beforeEnter: (to, from, next) => {
+            //     (localStorage.getItem("userToken") !== null) ? next() : next({name: 'start-page'})
+            // }
         },
         {
             path: '/updateCoordinate',

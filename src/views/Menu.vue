@@ -53,7 +53,6 @@ export default {
 <template>
 <header>
   <Header/>
-  <br>
   <LogOutComponent/>
 </header>
 <body>

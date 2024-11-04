@@ -11,6 +11,34 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+    }},
+    server: {
+      port: 8082,
+      proxy: {
+        '/user' :{
+          target: 'http://127.0.0.1:8080/',
+          ws: true,
+          changeOrigin: true,
+          secure: false
+        },
+        '/space' :{
+          target: 'http://127.0.0.1:8080/',
+          ws: true,
+          changeOrigin: true,
+          secure: false
+        },
+        '/edit' :{
+          target: 'http://127.0.0.1:8080/',
+          ws: true,
+          changeOrigin: true,
+          secure: false
+        },
+        '/special' :{
+          target: 'http://127.0.0.1:8080/',
+          ws: true,
+          changeOrigin: true,
+          secure: false
+        },
+      }
+    },
 })

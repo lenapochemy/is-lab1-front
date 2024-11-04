@@ -45,11 +45,14 @@ export default {
     },
     logIn: function (){
       if(this.validateLogin() && this.validatePassword()) {
-        api.post("/user/logIn", this.logData)
+        let urlEncoded = new URLSearchParams();
+        urlEncoded.append("login", this.logData.login);
+        urlEncoded.append("password",this.logData.password);
+        api.post("/user/logIn",urlEncoded)
             .then(response => {
               if (response.status === 200) {
                 localStorage.setItem("userLogin", this.logData.login);
-                localStorage.setItem("userToken", response.data);
+                // localStorage.setItem("userToken", response.data);
 
                 this.$router.push({name: 'menu-page'})
               }

@@ -94,7 +94,9 @@ export default{
           })
     },
     filterSpaceMarine(){
+      console.log("Aaaa")
       if(this.validateMarineType() && this.validateMarine()) {
+        console.log("dfffffff")
         this.inMarineFilter = true;
         api.get("/space/" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage + "/10")
             .then(response => {

@@ -49,13 +49,13 @@ export default {
     getRoleText(role){
       switch (role){
         case "APPROVED_ADMIN":
-          this.$store.commit('setAdmin', true);
+          // this.$store.commit('setAdmin', true);
           return "admin, you can delete and update all objects. Also you can approve new admin.";
         case "WAITING_ADMIN":
           return "just user, you can delete and update just your objects.\nYour request for becoming admin on considerate," +
               " please wait for approve from another admin "
         default:
-          this.$store.commit('setAdmin', false);
+          // this.$store.commit('setAdmin', false);
           return "just user, you can delete and update just your objects.";
       }
     },
