@@ -1,6 +1,6 @@
 <script >
 import {api} from "@/axios.js";
-import {validateNotEmpty} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 import {errorHandler} from "@/js/utils.js";
 
 export default {
@@ -19,7 +19,7 @@ export default {
             .then(response => {
               if (response.status === 200) {
                 this.spaceMarines = response.data;
-                if(this.spaceMarines.length == 0) {
+                if(this.spaceMarines.length === 0) {
                   document.getElementById("res_name").innerHTML = "No this space marines";
                   this.callNameStart = false;
                 } else {
@@ -37,7 +37,7 @@ export default {
       }
     },
     validateName(){
-      return validateNotEmpty(this.name, "Name start string", "name");
+      return validateString(this.name, "Name start string", "name_error");
     }
   }
 
@@ -50,13 +50,14 @@ export default {
     <label for="name_str">Write name start:</label>
     <input id="name_str" type="text" @click.prevent="getWithNameStarts" v-model="name"/>
     <input class="but"  type="button" @click.prevent="getWithNameStarts" value="get space marine with this name start"/>
-    <span class="error" id="filter_name_error"/>
+    <span class="error" id="name_error"/>
   </div>
 
   <p id="res_name"></p>
 
   <table border="1" id="space_marine_table" v-if="callNameStart">
-    <thead>
+    <tbody>
+    <tr>
     <th>ID</th>
     <th>name</th>
     <th>coord ID</th>
@@ -70,8 +71,7 @@ export default {
     <th>category</th>
     <th>weapon type</th>
     <th>melee weapon</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="marine in spaceMarines">
       <td>{{marine.id}}</td>
       <td>{{marine.name}}</td>

@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {validateNotEmpty} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 import {errorHandler} from "@/js/utils.js";
 
 export default {
@@ -27,7 +27,7 @@ export default {
           })
     },
     validateMarine(){
-      return validateNotEmpty(this.spaceMarine, "Space marine", "marine")
+      return validateString(this.spaceMarine, "Space marine", "marine_error")
     },
     getEditInfo: function() {
       if(this.validateMarine()) {
@@ -50,19 +50,19 @@ export default {
     <select v-model="spaceMarine" @change="validateMarine">
       <option v-for="marine in spaceMarines" v-bind:value="marine" >
         ID: {{marine.id}}, name: {{marine.name}}, coord ID: {{marine.coordinates.id}}, date: {{marine.creationDate}}, chapter ID: {{marine.chapter.id}}, health: {{marine.health}}, category: {{marine.category}}, weapon type: {{marine.weaponType}}, melee weapon: {{marine.meleeWeapon}}</option>    </select>
-    <span class="error" id="filter_marine_error"/>
+    <span class="error" id="marine_error"/>
   </div>
 
   <input class="but"  type="submit" @click.prevent="getEditInfo()" value="get info"/>
 
   <table border="1" id="chapter_table">
-    <thead>
+    <tbody>
+    <tr>
     <th>space marine id</th>
     <th>user login</th>
     <th>date</th>
     <th>type</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="marine in editSpaceMarineInfo">
       <td>{{marine.spaceMarine.id}}</td>
       <td>{{marine.user.login}}</td>

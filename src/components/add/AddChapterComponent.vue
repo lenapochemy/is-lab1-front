@@ -1,7 +1,7 @@
 <script>
 import {api} from "@/axios.js";
 import {errorHandler} from "@/js/utils.js";
-import {validateChapterName} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 
 export default {
   name: "AddChapterComponent",
@@ -18,16 +18,15 @@ export default {
       if(this.validateName()) {
         api.post("/space/chapter/create", this.chapter)
             .then(response => {
-              // document.getElementById("res").innerHTML = "ura add";
               document.getElementById("res_add_chap").innerHTML = "Adding chapter was successful!"
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              errorHandler(error.response.status, "res_add_chap");
             })
       }
     },
     validateName(){
-      return validateChapterName(this.chapter.name);
+      return validateString(this.chapter.name, "Chapter name", "chapter_name_error");
     },
   }
 }
@@ -45,7 +44,6 @@ export default {
     <div>
       <span>chapter parent legion:</span>
       <input type="text" v-model="chapter.parentLegion"/>
-      <!--      <span id="chapter_parent_error"/>-->
     </div>
 
     <div>

@@ -1,6 +1,6 @@
 <script >
 import {api} from "@/axios.js";
-import {validateChapter, validateCoords} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 import {errorHandler} from "@/js/utils.js";
 
 export default {
@@ -27,7 +27,7 @@ export default {
           })
     },
     validateCoords(){
-      return validateCoords(this.coordinates);
+      return validateString(this.coordinates, "Coordinates", "coord_error");
     },
     getEditInfo: function() {
       if(this.validateCoords()) {
@@ -57,13 +57,13 @@ export default {
   <input class="but"  type="submit" @click.prevent="getEditInfo()" value="get info"/>
 
   <table border="1" id="coord_table">
-    <thead>
+    <tbody>
+    <tr>
     <th>coord id</th>
     <th>user login</th>
     <th>date</th>
     <th>type</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="coord in editCoordsInfo">
       <td>{{coord.coordinates.id}}</td>
       <td>{{coord.user.login}}</td>

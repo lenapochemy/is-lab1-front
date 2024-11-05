@@ -1,7 +1,7 @@
 <script>
 import {api} from "@/axios.js";
 import {errorHandler} from "@/js/utils.js";
-import {validateCoordX, validateCoordY} from "@/js/validation.js";
+import {validateCoordX, validateNumber} from "@/js/validation.js";
 
 export default {
   name: "AddCoordinateComponent",
@@ -27,10 +27,10 @@ export default {
       }
     },
     validateX(){
-      return validateCoordX(this.coordinates.x);
+      return validateCoordX(this.coordinates.x, "coord_x_error");
     },
     validateY(){
-      return validateCoordY(this.coordinates.y);
+      return validateNumber(this.coordinates.y, "Coordinate Y", "coord_y_error");
     },
   }
 }
@@ -43,7 +43,6 @@ export default {
       <span>coordinate X:</span>
       <input type="text" v-model="coordinates.x" @change="validateX"/>
       <span class="error" id="coord_x_error"/>
-      <!--      <p v-if="$v.coordinates.x.$error">Поле должно быть числом большим -147</p>-->
     </div>
 
     <div>

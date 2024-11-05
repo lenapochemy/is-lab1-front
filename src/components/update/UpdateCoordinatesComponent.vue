@@ -1,5 +1,5 @@
 <script >
-import {validateCoordX, validateCoordY} from "@/js/validation.js";
+import {validateCoordX, validateNumber} from "@/js/validation.js";
 import {api} from "@/axios.js";
 import {errorHandler} from "@/js/utils.js";
 export default {
@@ -21,14 +21,13 @@ export default {
       this.$router.push({name: 'menu-page'})
     },
     validateX(){
-      return validateCoordX(this.coordinate.x);
+      return validateCoordX(this.coordinate.x, "coord_x_error");
     },
     validateY(){
-      return validateCoordY(this.coordinate.y);
+      return validateNumber(this.coordinate.y, "Coordinate Y", "coord_y_error");
     },
     update(){
       if(this.validateX() && this.validateY()){
-        console.log("in request");
         api.post("/space/coord/update", this.coordinate)
             .then(response => {
               document.getElementById("res_update_coord").innerHTML = "Update coordinate was successful!"

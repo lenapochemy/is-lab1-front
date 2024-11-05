@@ -52,7 +52,8 @@ export default {
   <input class="but"  type="button" @click.prevent="getSpaceMarineWithMinChapter" value="get space marine with min chapter"/>
 
   <table border="1" id="space_marine_table" v-if="callMinSpaceMarine">
-    <thead>
+    <tbody>
+    <tr>
     <th>ID</th>
     <th>name</th>
     <th>coord ID</th>
@@ -66,8 +67,7 @@ export default {
     <th>category</th>
     <th>weapon type</th>
     <th>melee weapon</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr>
       <td>{{minSpaceMarine.id}}</td>
       <td>{{minSpaceMarine.name}}</td>

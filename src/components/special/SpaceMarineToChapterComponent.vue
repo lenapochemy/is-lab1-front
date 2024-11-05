@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {validateNotEmpty} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 import {errorHandler} from "@/js/utils.js";
 
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     getAllChapters(){
-      api.get("/space/chapter/all")
+      api.get("/space/chapter/user")
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data;
@@ -30,7 +30,7 @@ export default {
           })
     },
     getAllSpaceMarines(){
-      api.get("/space/all")
+      api.get("/space/user")
           .then(response => {
             if(response.status === 200){
               this.spaceMarines = response.data;
@@ -41,13 +41,13 @@ export default {
           })
     },
     validateChapter(){
-      return validateNotEmpty(this.chapter, "Chapter", "chapter");
+      return validateString(this.chapter, "Chapter", "chapter_error");
     },
     validateSpaceMarine(){
-      return validateNotEmpty(this.marine, "Space marine", "marine");
+      return validateString(this.marine, "Space marine", "marine_error");
     },
     addSpaceMarineToChapter(){
-      if(this.validateSpaceMarine() && this.validateChapter()) {
+      if(this.validateChapter() && this.validateSpaceMarine()) {
         api.post("/special/spaceMarineToChapter/" + this.chapter.id, this.marine)
             .then(response => {
               document.getElementById("res_to_chapter").innerHTML = "Space marine added to chapter successful!";
@@ -69,7 +69,7 @@ export default {
       <option v-for="chapter in chapters" v-bind:value="chapter" >ID: {{chapter.id}}, name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
     </select>
 
-    <span class="error" id="filter_chapter_error"/>
+    <span class="error" id="chapter_error"/>
   </div>
 
   <div>
@@ -79,7 +79,7 @@ export default {
         ID: {{spaceMarine.id}}, name: {{spaceMarine.name}}, coord ID: {{spaceMarine.coordinates.id}}, date: {{spaceMarine.creationDate}}, chapter ID: {{spaceMarine.chapter.id}}, health: {{spaceMarine.health}}, category: {{spaceMarine.category}}, weapon type: {{spaceMarine.weaponType}}, melee weapon: {{spaceMarine.meleeWeapon}}</option>
     </select>
 
-    <span class="error" id="filter_marine_error"/>
+    <span class="error" id="marine_error"/>
   </div>
 
   <input class="but"  type="button" @click.prevent="addSpaceMarineToChapter" value="add space marine to chapter"/>

@@ -16,7 +16,7 @@ export default {
   },
   methods:{
     getRole(){
-      api.get("/user/admin/role")
+      api.get("/user/role")
           .then(response => {
             let role = response.data;
             this.role = this.getRoleText(role);
@@ -64,7 +64,7 @@ h3 {
 }
 
 
-.my_name, .data, #lab_work {
+.my_name, .data {
   //font-family: fantasy;
   //color: deeppink;
   font-size: large;
@@ -75,14 +75,8 @@ h3 {
   //letter-spacing: 2pt;
 }
 
-.data{
+.data {
   color: blue;
 }
-
-#lab_work{
-  font-size: 2rem;
-  letter-spacing: 1pt;
-}
-
 
 </style>

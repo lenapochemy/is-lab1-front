@@ -1,7 +1,7 @@
 <script>
 import {api} from "@/axios.js";
-import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
-import {validateCategory, validateChapter, validateCoords, validateHealth, validateName} from "@/js/validation.js";
+import {errorHandler} from "@/js/utils.js";
+import {validateHealth, validateString} from "@/js/validation.js";
 
 export default{
   name: "AddSpaceMarineComponent",
@@ -67,19 +67,19 @@ export default{
           })
     },
     validateName(){
-      return validateName(this.spaceMarine.name);
+      return validateString(this.spaceMarine.name, "Name", "name_error");
     },
     validateCoords(){
-      return validateCoords(this.spaceMarine.coordinates);
+      return validateString(this.spaceMarine.coordinates.id, "Coordinates", "coord_error");
     },
     validateChapter(){
-      return validateChapter(this.spaceMarine.chapter);
+      return validateString(this.spaceMarine.chapter.id, "Chapter", "chapter_error");
     },
     validateHealth(){
-      return validateHealth(this.spaceMarine.health);
+      return validateHealth(this.spaceMarine.health, "health_error");
     },
     validateCategory(){
-      return validateCategory(this.spaceMarine.category);
+      return validateString(this.spaceMarine.category, "Category", "category_error");
     },
   },
   mounted() {

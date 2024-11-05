@@ -5,12 +5,12 @@
     <div>
       <label for="login">LogIn </label>
       <input type="text" id="login" name="login" v-model="regData.login" @change="validateLogin" >
-      <span class="error" id="filter_login_error"/>
+      <span class="error" id="login_error"/>
     </div>
     <div>
       <label for="password">Password </label>
       <input type="password" id="password" name="password" v-model="regData.password" @change="validatePassword">
-      <span class="error" id="filter_password_error"/>
+      <span class="error" id="password_error"/>
     </div>
     <input class="but" type="submit" value="Registration">
   </form>
@@ -23,7 +23,7 @@
 <script>
 import {api} from '@/axios'
 import {errorHandler} from "@/js/utils.js";
-import {validateNotEmpty} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 
 export default {
   name: "RegistrationComponent",
@@ -37,11 +37,11 @@ export default {
   },
   methods: {
     validateLogin(){
-      return validateNotEmpty(this.regData.login, "Login", "login");
+      return validateString(this.regData.login, "Login", "login");
 
     },
     validatePassword(){
-      return validateNotEmpty(this.regData.password, "Password", "password");
+      return validateString(this.regData.password, "Password", "password");
 
     },
     registration: function (){

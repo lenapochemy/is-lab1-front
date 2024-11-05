@@ -3,14 +3,7 @@
 import {api} from "@/axios.js";
 import {cleanErrorMessage, errorHandler} from "@/js/utils.js";
 import UpdateComponent from "@/components/update/UpdateCoordinatesComponent.vue";
-import {
-  validateCategory,
-  validateChapterName,
-  validateCoordX,
-  validateCoordY,
-  validateFilterType, validateHealth,
-  validateName, validateNotEmpty, validateNumber
-} from "@/js/validation.js";
+import {validateCoordX, validateFilterType, validateHealth,validateNumber, validateString} from "@/js/validation.js";
 import AdminComponent from "@/components/AdminComponent.vue";
 
 export default{
@@ -102,7 +95,7 @@ export default{
             .then(response => {
               if (response.status === 200) {
                 this.spaceMarines = response.data.content;
-                if (this.spaceMarines.length == 0) {
+                if (this.spaceMarines.length === 0) {
                   document.getElementById("filter_marine_error").innerHTML = "No find space marines with this " + this.filterMarineType;
                 }
                 this.totalMarinePages = response.data.totalPages;
@@ -143,14 +136,14 @@ export default{
           })
     },
     filterChapter(){
-      if(this.validateChapter() && this.validateChapterType()) {
+      if(this.validateChapterType() && this.validateChapter()) {
         this.inChapterFilter = true;
 
         api.get("/space/chapter/" + this.filterChapterType + "/" + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage + "/10")
             .then(response => {
               if (response.status === 200) {
                 this.chapters = response.data.content;
-                if (this.chapters.length == 0) {
+                if (this.chapters.length === 0) {
                   document.getElementById("filter_chapter_error").innerHTML = "No find chapter with this " + this.filterChapterType;
                 }
                 this.totalChapterPages = response.data.totalPages;
@@ -197,7 +190,7 @@ export default{
             .then(response => {
               if (response.status === 200) {
                 this.coords = response.data.content;
-                if (this.coords.length == 0) {
+                if (this.coords.length === 0) {
                   document.getElementById("filter_coord_error").innerHTML = "No find coord with this " + this.filterCoordType;
                 }
                 this.totalCoordPages = response.data.totalPages;
@@ -279,7 +272,7 @@ export default{
       this.$router.push({name: 'update-space-marine-page'})
     },
     validateChapter(){
-      return validateChapterName(this.filterChapterParam);
+      return validateString(this.filterChapterParam, "Chapter " + this.filterChapterType, "chapter_name_error");
     },
     validateChapterType(){
       return validateFilterType(this.filterChapterType, "chapter");
@@ -288,33 +281,25 @@ export default{
       return validateFilterType(this.filterCoordType, "coord");
     },
     validateCoord(){
-      if(this.filterCoordType == 'x'){
-        return validateCoordX(this.filterCoordParam);
+      if(this.filterCoordType === 'x'){
+        return validateCoordX(this.filterCoordParam, "coord_x_error");
       } else {
-        return validateCoordY(this.filterCoordParam);
+        return validateNumber(this.filterCoordParam, "Coordinate Y", "coord_y_error");
       }
     },
     validateMarineType(){
       return validateFilterType(this.filterMarineType, "marine")
     },
     validateMarine(){
-      switch (this.filterMarineType){
-        case 'Name':
-          return validateName(this.filterMarineParam);
-        case 'Coord':
-          return validateNumber(this.filterMarineParam, "Coordinates id", "marine");
-        case 'Date':
-          return validateNotEmpty(this.filterMarineParam, "Date", "marine");
-        case 'Chapter':
-          return validateNumber(this.filterMarineParam, "Chapter", "marine");
-        case 'Health':
-          return validateHealth(this.filterMarineParam)
-        case 'Category':
-          return validateCategory(this.filterMarineParam);
-        case 'Weapon':
-          return validateNotEmpty(this.filterMarineParam, "Weapon", "marine");
-        case 'MeleeWeapon':
-          return validateNotEmpty(this.filterMarineParam, "Melee weapon", "marine");
+      switch (this.filterMarineType) {
+        case 'name':
+          return validateString(this.filterMarineParam, "Name",  "name_error");
+        case 'coord':
+          return validateString(this.filterMarineParam, "Coordinates id", "marine_error");
+        case 'chapter':
+          return validateString(this.filterMarineParam, "Chapter id", "marine_error");
+        case 'health':
+          return validateHealth(this.filterMarineParam, "health_error");
       }
     },
 
@@ -339,7 +324,8 @@ export default{
   <p id="res_main_marine" class="error"></p>
 
   <table border="1" id="space_marine_table">
-    <thead>
+    <tbody>
+    <tr>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('id')" value="ID"/></th>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('name')" value="name"/></th>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('coordinates')" value="coord id"/></th>
@@ -354,8 +340,7 @@ export default{
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('weaponType')" value="weapon type"/></th>
     <th><input class="but"  type="submit" @click.prevent="getSpaceMarines('meleeWeapon')" value="melee weapon"/></th>
     <th>owner</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="marine in spaceMarines">
       <td>{{marine.id}}</td>
       <td>{{marine.name}}</td>
@@ -397,7 +382,6 @@ export default{
       <span class="error" id="coord_error"></span>
       <span class="error" id="chapter_error"></span>
       <span class="error" id="health_error"></span>
-      <span class="error" id="category_error"></span>
 
     </form>
     <input class="but" type="button" v-if="inMarineFilter" @click.prevent="getSpaceMarines()" value="delete filter"/>
@@ -413,13 +397,13 @@ export default{
   <p class="label">Coordinates:</p>
   <p id="res_main_coord" class="error"></p>
   <table border="1" id="coord_table" v-if="coords.length > 0">
-    <thead>
+    <tbody>
+    <tr>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('x')" value="X"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getCoordinates('y')" value="Y"/></th>
     <th>Owner</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="coord in coords">
       <td>{{coord.id}}</td>
       <td>{{coord.x}}</td>
@@ -460,13 +444,13 @@ export default{
   <p class="label">Chapters:</p>
   <p id="res_main_chapter" class="error"></p>
   <table border="1" id="chapter_table">
-    <thead>
+    <tbody>
+    <tr>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('id')" value="ID"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('name')" value="name"/></th>
     <th> <input class="but"  type="submit" @click.prevent="getChapters('parentLegion')" value="parent legion"/></th>
     <th>owner</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="chapter in chapters">
       <td>{{chapter.id}}</td>
       <td>{{chapter.name}}</td>
@@ -512,11 +496,5 @@ export default{
 }
 .error {
   color: red;
-}
-.my {
-  color: cornflowerblue;
-}
-.notMy {
-  color: lightyellow;
 }
 </style>

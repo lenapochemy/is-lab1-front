@@ -1,6 +1,6 @@
 <script>
 import {api} from "@/axios.js";
-import {validateChapter} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 import {errorHandler} from "@/js/utils.js";
 
 export default {
@@ -27,7 +27,7 @@ export default {
           })
     },
     validateChapter(){
-      return validateChapter(this.chapter);
+      return validateString(this.chapter, "Chapter", "chapter_error");
     },
     getEditInfo: function() {
       if(this.validateChapter()) {
@@ -56,13 +56,13 @@ export default {
   <input class="but"  type="submit" @click.prevent="getEditInfo()" value="get info"/>
 
   <table border="1" id="chapter_table">
-    <thead>
+    <tbody>
+    <tr>
     <th>chapter id</th>
     <th>user login</th>
     <th>date</th>
     <th>type</th>
-    </thead>
-    <tbody>
+    </tr>
     <tr v-for="chap in editChapterInfo">
       <td>{{chap.chapter.id}}</td>
       <td>{{chap.user.login}}</td>

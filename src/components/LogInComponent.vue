@@ -5,12 +5,12 @@
     <div class="form-login">
       <label for="login">Login </label>
       <input type="text" id="login" name="login" v-model="logData.login" @change="validateLogin">
-      <span class="error" id="filter_login_error"/>
+      <span class="error" id="login_error"/>
     </div>
     <div>
       <label for="password">Password </label>
       <input type="password" id="password" name="password" v-model="logData.password" @change="validatePassword">
-      <span class="error" id="filter_password_error"/>
+      <span class="error" id="password_error"/>
     </div>
     <input class="but" type="submit" value="LogIn">
   </form>
@@ -24,7 +24,7 @@
 <script>
 import {api} from "@/axios";
 import {errorHandler} from "@/js/utils.js";
-import {validateNotEmpty} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 
 export default {
   name: "LogInComponent",
@@ -38,17 +38,17 @@ export default {
   },
   methods: {
     validateLogin(){
-      return validateNotEmpty(this.logData.login, "Login", "login");
+      return validateString(this.logData.login, "Login", "login_error");
     },
     validatePassword(){
-      return validateNotEmpty(this.logData.password, "Password", "password");
+      return validateString(this.logData.password, "Password", "password_error");
     },
     logIn: function (){
       if(this.validateLogin() && this.validatePassword()) {
         let urlEncoded = new URLSearchParams();
         urlEncoded.append("login", this.logData.login);
         urlEncoded.append("password",this.logData.password);
-        api.post("/user/logIn",urlEncoded)
+        api.post("/user/logIn", urlEncoded)
             .then(response => {
               if (response.status === 200) {
                 localStorage.setItem("userLogin", this.logData.login);

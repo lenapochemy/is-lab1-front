@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     getRole(){
-      api.get("/user/admin/role")
+      api.get("/user/role")
           .then(response => {
             this.role = response.data;
             this.roleText = this.getRoleText(response.data)
@@ -37,7 +37,7 @@ export default {
           })
     },
     becomeAdmin(){
-      api.post("/user/admin/become")
+      api.post("/user/becomeAdmin")
           .then(response => {
             document.getElementById("admin").innerHTML = response.data;
             this.getRole();
@@ -78,7 +78,7 @@ export default {
   <br>
   <p>You are {{roleText}}</p>
 
-  <input class="but" type="submit" v-if="role == 'USER'" @click.prevent="becomeAdmin" value="become admin"/>
+  <input class="but" type="submit" v-if="role === 'USER'" @click.prevent="becomeAdmin" value="become admin"/>
 
   <div v-if="role === 'APPROVED_ADMIN' && waitingAdmins.length > 0">
     <p class="label">Users, who want to be admin:</p>

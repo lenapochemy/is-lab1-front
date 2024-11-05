@@ -1,7 +1,7 @@
 <script>
 import {api} from "@/axios.js";
 import {errorHandler} from "@/js/utils.js";
-import {validateChapterName} from "@/js/validation.js";
+import {validateString} from "@/js/validation.js";
 
 export default {
   name: "CreateNewChapterComponent",
@@ -26,7 +26,7 @@ export default {
       }
     },
     validateName(){
-      return validateChapterName(this.chapter.name);
+      return validateString(this.chapter.name, "Chapter name", "chapter_name_error");
     },
 
   }
