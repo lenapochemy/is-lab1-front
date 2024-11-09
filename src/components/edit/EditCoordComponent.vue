@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     getAllCoordinates(){
-      api.get("/space/coord/all")
+      api.get("/space/coord?filter_param=all")
           .then(response => {
             if(response.status === 200){
               this.coords = response.data;

@@ -28,8 +28,8 @@ export default {
   font-weight: bold;
   padding: 4px 9px 4px;
   font-size: medium;
-  //margin-top: 30px;
-  //margin-bottom: 30px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   position: absolute;
   right: 0;
 }

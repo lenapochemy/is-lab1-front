@@ -3,8 +3,8 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from "./router.js"
-import store from "@/js/store.js";
-// import {Vuelidate} from "vuelidate";
+import store from "./js/store.js";
+
 
 const app = createApp(App).use(router).use(store).mount('#app')
 

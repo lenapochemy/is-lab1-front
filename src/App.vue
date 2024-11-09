@@ -1,25 +1,7 @@
 <script>
 
-import Header from '@/components/Header.vue';
-// import RegistrationComponent from "@/components/RegistrationComponent.vue";
-import StartView from "@/views/StartView.vue";
-
 export default {
-  name: 'App',
-  components: {
-    StartView,
-    Header
-  },
-  data(){
-    return {
-      headerParams: {
-        title: "Лабораторная работа 1",
-        name: "Русакова Лена",
-        group: "P3317",
-        variant: "367519"
-      }
-    }
-  }
+  name: 'App'
 }
 
 </script>
@@ -32,17 +14,6 @@ export default {
 
 <style>
 
-.but{
-  background-color: deeppink;
-  font-weight: bold;
-  padding: 4px 9px 4px;
-  font-size: medium;
-  //margin-top: 30px;
-  //margin-bottom: 30px;
-}
-.but:hover, .but:focus{
-  background-color: lightpink;
-}
 
 header {
   line-height: 1.5;

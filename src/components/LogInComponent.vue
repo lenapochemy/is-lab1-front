@@ -17,7 +17,7 @@
   <span id="res_login"></span>
 
   <div>
-    <img alt="cat picture" src="../assets/cat.jpg"/>
+    <img alt="cat picture" src="/cat.jpg"/>
   </div>
 </template>
 

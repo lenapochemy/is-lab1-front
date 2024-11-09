@@ -16,7 +16,7 @@
   </form>
   <p id="res_reg"></p>
   <div>
-    <img alt="cat picture" src="../assets/cat2.jpg"/>
+    <img alt="cat picture" src="/cat2.jpg"/>
   </div>
 </template>
 

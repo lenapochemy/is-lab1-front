@@ -65,14 +65,8 @@ h3 {
 
 
 .my_name, .data {
-  //font-family: fantasy;
-  //color: deeppink;
   font-size: large;
   font-weight: bold;
-  //text-shadow: 2px 2px 2px black;
-  //font-size: 3rem;
-  //word-spacing: 4pt;
-  //letter-spacing: 2pt;
 }
 
 .data {

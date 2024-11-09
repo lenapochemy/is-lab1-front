@@ -62,7 +62,8 @@ export default{
       if(param != null){
         this.currentMarineParam = param;
       }
-      api.get("/space/all/all/" + this.currentMarineParam + "/" + this.currentMarinePage + "/10")
+      let query = "?filter_param=all&filter_value=all&sort_param=" +   this.currentMarineParam + "&page=" +  this.currentMarinePage + "&size=10";
+      api.get("/space" + query)
           .then(response => {
             if(response.status === 200){
               this.spaceMarines = response.data.content;
@@ -75,7 +76,7 @@ export default{
           })
     },
     getUsersSpaceMarines: function(){
-      api.get("/space/user/id")
+      api.get("/space?filter_param=user&filter_value=id")
           .then(response => {
             if(response.status === 200){
               this.users_spaceMarines_id = response.data;
@@ -87,11 +88,10 @@ export default{
           })
     },
     filterSpaceMarine(){
-      console.log("Aaaa")
       if(this.validateMarineType() && this.validateMarine()) {
-        console.log("dfffffff")
         this.inMarineFilter = true;
-        api.get("/space/" + this.filterMarineType + "/" + this.filterMarineParam + "/" + this.currentMarineParam + "/" + this.currentMarinePage + "/10")
+        let query = "?filter_param=" + this.filterMarineType + "&filter_value=" + this.filterMarineParam + "sort_param=" +   this.currentMarineParam + "&page=" +  this.currentMarinePage + "&size=10";
+        api.get("/space" + query)
             .then(response => {
               if (response.status === 200) {
                 this.spaceMarines = response.data.content;
@@ -111,7 +111,8 @@ export default{
       if(param != null){
         this.currentChapterParam = param;
       }
-      api.get("/space/chapter/all/all/" + this.currentChapterParam + "/" + this.currentChapterPage + "/10")
+      let query = "?filter_param=all&filter_value=all&sort_param=" +   this.currentChapterParam + "&page=" +  this.currentChapterPage + "&size=10";
+      api.get("/space/chapter" + query)
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data.content;
@@ -124,7 +125,7 @@ export default{
           })
     },
     getUsersChapters: function(){
-      api.get("/space/chapter/user/id")
+      api.get("/space/chapter?filter_param=user&filter_value=id")
           .then(response => {
             if(response.status === 200){
               this.users_chapters_id = response.data;
@@ -138,8 +139,8 @@ export default{
     filterChapter(){
       if(this.validateChapterType() && this.validateChapter()) {
         this.inChapterFilter = true;
-
-        api.get("/space/chapter/" + this.filterChapterType + "/" + this.filterChapterParam + "/" + this.currentChapterParam + "/" + this.currentChapterPage + "/10")
+        let query = "?filter_param=" + this.filterChapterType + "&filter_value=" + this.filterChapterParam + "sort_param=" +   this.currentChapterParam + "&page=" +  this.currentChapterPage + "&size=10";
+        api.get("/space/chapter" + query)
             .then(response => {
               if (response.status === 200) {
                 this.chapters = response.data.content;
@@ -159,7 +160,8 @@ export default{
         this.currentCoordParam = param;
       }
       this.inCoordFilter = false;
-      api.get("/space/coord/all/all/" + this.currentCoordParam + "/" + this.currentCoordPage + "/10")
+      let query = "?filter_param=all&filter_value=all&sort_param=" +   this.currentCoordParam + "&page=" +  this.currentCoordPage + "&size=10";
+      api.get("/space/coord" + query)
           .then(response => {
             if(response.status === 200){
               this.coords = response.data.content;
@@ -172,7 +174,7 @@ export default{
           })
     },
     getUsersCoordinates: function(){
-      api.get("/space/coord/user/id")
+      api.get("/space/coord?filter_param=user&filter_value=id")
           .then(response => {
             if(response.status === 200){
               this.users_coords_id = response.data;
@@ -186,7 +188,8 @@ export default{
     filterCoord(){
       if(this.validateCoordType() && this.validateCoord()) {
         this.inCoordFilter = true;
-        api.get("/space/coord/" + this.filterCoordType + "/" + this.filterCoordParam + "/" + this.currentCoordParam + "/" + this.currentCoordPage + "/10")
+        let query = "?filter_param=" + this.filterCoordType + "&filter_value=" + this.filterCoordParam + "sort_param=" +   this.currentCoordParam + "&page=" +  this.currentCoordPage + "&size=10";
+        api.get("/space/coord" + query)
             .then(response => {
               if (response.status === 200) {
                 this.coords = response.data.content;
@@ -490,11 +493,22 @@ export default{
 
 </template>
 
-<style scoped>
+<style>
 .error input {
   border-color: red;
 }
 .error {
   color: red;
+}
+
+
+.but{
+  background-color: deeppink;
+  font-weight: bold;
+  padding: 4px 9px 4px;
+  font-size: medium;
+}
+.but:hover, .but:focus{
+  background-color: lightpink;
 }
 </style>

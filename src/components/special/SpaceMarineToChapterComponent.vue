@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     getAllChapters(){
-      api.get("/space/chapter/user")
+      api.get("/space/chapter?filter_param=user")
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data;
@@ -30,7 +30,7 @@ export default {
           })
     },
     getAllSpaceMarines(){
-      api.get("/space/user")
+      api.get("/space?filter_param=user")
           .then(response => {
             if(response.status === 200){
               this.spaceMarines = response.data;

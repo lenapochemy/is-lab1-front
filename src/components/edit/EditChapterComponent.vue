@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     getAllChapters(){
-      api.get("/space/chapter/all")
+      api.get("/space/chapter?filter_param=all")
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data;

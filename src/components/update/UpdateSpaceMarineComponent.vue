@@ -51,7 +51,7 @@ export default {
       }
     },
     getAllChapters(){
-      api.get("/space/chapter/user")
+      api.get("/space/chapter?filter_param=user")
           .then(response => {
             if(response.status === 200){
               this.chapters = response.data;
@@ -62,7 +62,7 @@ export default {
           })
     },
     getAllCoordinates(){
-      api.get("/space/coord/user")
+      api.get("/space/coord?filter_param=user")
           .then(response => {
             if(response.status === 200){
               this.coords = response.data;

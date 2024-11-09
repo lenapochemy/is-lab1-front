@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     getAllSpaceMarines(){
-      api.get("/space/all")
+      api.get("/space?filter_param=all")
           .then(response => {
             if(response.status === 200){
               this.spaceMarines = response.data;

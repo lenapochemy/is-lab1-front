@@ -16,25 +16,25 @@ export default defineConfig({
       port: 8082,
       proxy: {
         '/user' :{
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://127.0.0.1:1314/',
           ws: true,
           changeOrigin: true,
           secure: false
         },
         '/space' :{
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://127.0.0.1:1314/',
           ws: true,
           changeOrigin: true,
           secure: false
         },
         '/edit' :{
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://127.0.0.1:1314/',
           ws: true,
           changeOrigin: true,
           secure: false
         },
         '/special' :{
-          target: 'http://127.0.0.1:8080/',
+          target: 'http://127.0.0.1:1314/',
           ws: true,
           changeOrigin: true,
           secure: false

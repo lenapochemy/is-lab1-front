@@ -11,6 +11,7 @@ import EditChapterComponent from "@/components/edit/EditChapterComponent.vue";
 import EditCoordComponent from "@/components/edit/EditCoordComponent.vue";
 import EditSpaceMarineComponent from "@/components/edit/EditSpaceMarineComponent.vue";
 import Header from "@/components/Header.vue";
+import VisualizationComponent from "@/components/VisualizationComponent.vue";
 export default {
   components:{
     Header,
@@ -23,7 +24,8 @@ export default {
     AddSpaceMarineComponent,
     EditChapterComponent,
     EditCoordComponent,
-    EditSpaceMarineComponent
+    EditSpaceMarineComponent,
+    VisualizationComponent
   },
   data(){
     return {
@@ -35,7 +37,8 @@ export default {
         {"value": "AddSpaceMarine", "name": "Add space marine"},
         {"value": "EditChapter", "name": "Chapter editing info"},
         {"value": "EditCoord", "name": "Coordinates editing info"},
-        {"value": "EditSpaceMarine", "name": "Space marine editing info"}
+        {"value": "EditSpaceMarine", "name": "Space marine editing info"},
+        {"value": "Visualization", "name": "Visualization"}
       ],
       currentButton: "Space"
     }
@@ -76,7 +79,6 @@ export default {
   font-weight: bold;
   padding: 4px 9px 4px;
   font-size: large;
-  /*margin: 30px 10px;*/
   margin: auto;
 }
 .tab-button:hover, .tab-button:focus, .tab-button:active{
