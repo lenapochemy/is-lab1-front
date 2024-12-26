@@ -39,6 +39,12 @@ export default defineConfig({
           changeOrigin: true,
           secure: false
         },
+        '/files' :{
+          target: 'http://127.0.0.1:1314/',
+          ws: true,
+          changeOrigin: true,
+          secure: false
+        },
       }
     },
 })

@@ -90,7 +90,7 @@ export default{
     filterSpaceMarine(){
       if(this.validateMarineType() && this.validateMarine()) {
         this.inMarineFilter = true;
-        let query = "?filter_param=" + this.filterMarineType + "&filter_value=" + this.filterMarineParam + "sort_param=" +   this.currentMarineParam + "&page=" +  this.currentMarinePage + "&size=10";
+        let query = "?filter_param=" + this.filterMarineType + "&filter_value=" + this.filterMarineParam + "&sort_param=" +   this.currentMarineParam + "&page=" +  this.currentMarinePage + "&size=10";
         api.get("/space" + query)
             .then(response => {
               if (response.status === 200) {

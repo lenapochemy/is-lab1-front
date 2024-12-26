@@ -21,7 +21,9 @@ export default {
               document.getElementById("res_add_chap").innerHTML = "Adding chapter was successful!"
             })
             .catch(error => {
-              errorHandler(error.response.status, "res_add_chap");
+              // errorHandler(error.response.status, "res_add_chap");
+              console.log(error.status, error.response.data);
+              errorHandler(error.status, "res_add_chap", "print", error.response.data);
             })
       }
     },

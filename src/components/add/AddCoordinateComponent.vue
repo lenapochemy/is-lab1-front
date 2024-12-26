@@ -22,7 +22,8 @@ export default {
               document.getElementById("res_add_coord").innerHTML = "Adding coordinates was successful!"
             })
             .catch(error => {
-              errorHandler(error.response.status, "res");
+              // errorHandler(error.response.status, "res");
+              errorHandler(error.status, "res_add_coord", "print", error.response.data);
             })
       }
     },

@@ -34,12 +34,13 @@ export default{
           this.validateHealth() && this.validateCategory()) {
         api.post("/space/create", this.spaceMarine)
             .then(response => {
-              document.getElementById("res_add_marine").innerHTML = "Adding coordinates was successful!";
+              document.getElementById("res_add_marine").innerHTML = "Adding space marine was successful!";
               // this.getSpaceMarines();
               // this.$router.push({name: 'main-page'})
             })
             .catch(error => {
-              errorHandler(error.response.status, "res_add_marine");
+              // errorHandler(error.response.status, "res_add_marine");
+              errorHandler(error.status, "res_add_marine", "print", error.response.data);
             })
       }
     },
@@ -101,7 +102,7 @@ export default{
     <div>
       <span>Coordinates:</span>
       <select v-model="spaceMarine.coordinates.id" @change="validateCoords">
-        <option v-for="coord in coords" v-bind:value="coord.id">X={{coord.x}}, Y={{coord.y}}</option>
+        <option v-for="coord in coords" v-bind:value="coord.id">id:{{coord.id}} X={{coord.x}}, Y={{coord.y}}</option>
       </select>
       <span class="error" id="coord_error"/>
     </div>
@@ -109,7 +110,7 @@ export default{
     <div>
       <span>Chapter:</span>
       <select v-model="spaceMarine.chapter.id" @change="validateChapter">
-        <option v-for="chapter in chapters" v-bind:value="chapter.id" >name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
+        <option v-for="chapter in chapters" v-bind:value="chapter.id">id:{{chapter.id}} name: {{chapter.name}}, parent legion: {{chapter.parentLegion}}</option>
       </select>
 
       <span class="error" id="chapter_error"/>
