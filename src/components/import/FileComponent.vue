@@ -11,6 +11,8 @@ export default {
   },
   methods:{
     uploadFile(){
+      document.getElementById("import_res").innerHTML = "";
+      document.getElementById("import_error").innerHTML = "";
       let formData = new FormData();
       formData.append("file", this.selectedFile);
 
@@ -43,7 +45,7 @@ export default {
 <!--    <p>Upload file</p>-->
     <div>
       <form @submit.prevent="uploadFile">
-        <label id="label" class="but" for="file">Select file</label>
+<!--        <label id="label" class="but" for="file">Select file</label>-->
         <input id="file" type="file" @change="selectFile">
         <br>
         <button class="but" type="submit">Import</button>
@@ -56,16 +58,11 @@ export default {
     <p id="import_res"></p>
   </div>
 
+<!--  <ImportHistoryComponent/>-->
 </template>
 
 <style scoped>
-#file {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
-}
+
 
 #label {
   background: lightpink;
